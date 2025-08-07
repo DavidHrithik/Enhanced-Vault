@@ -1,0 +1,108 @@
+# Azure Pipelines YAML for fullstack Java (Spring Boot) + React app
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  backendPath: 'backend'
+  frontendPath: 'frontend'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+          - script: |
+              cd $(frontendPath)
+              npm ci
+              npm run build
+            displayName: 'Build Frontend'
+          - script: |
+              rm -rf $(backendPath)/src/main/resources/static/*
+              cp -r $(frontendPath)/build/* $(backendPath)/src/main/resources/static/
+            displayName: 'Copy Frontend Build to Backend Static'
+          - task: Maven@3
+            inputs:
+              mavenPomFile: '$(backendPath)/pom.xml'
+              goals: 'clean package'
+              options: '-DskipTests'
+          - publish: $(backendPath)/target
+            artifact: backend
+
+  - stage: Deploy
+    dependsOn: Build
+    jobs:
+      - deployment: DeployBackend
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: backend
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: '<YOUR_AZURE_SERVICE_CONNECTION_NAME>'
+                    appType: 'webAppLinux'
+                    appName: 'CTS-VibeAppso41013-3'
+                    package: '$(Pipeline.Workspace)/backend/backend-0.0.1-SNAPSHOT.jar'
+
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  backendPath: 'backend'
+  frontendPath: 'frontend'
+
+stages:
+  - stage: Build
+    displayName: 'Build Stage'
+    jobs:
+      - job: Build
+        displayName: 'Build Backend and Frontend'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              cd $(frontendPath)
+              npm ci
+              npm run build
+            displayName: 'Build Frontend'
+
+          - task: Maven@3
+            inputs:
+              mavenPomFile: '$(backendPath)/pom.xml'
+              goals: 'clean package'
+              options: '-DskipTests'
+            displayName: 'Build Backend'
+
+          - publish: $(frontendPath)/build
+            artifact: frontend
+
+          - publish: $(backendPath)/target
+            artifact: backend
+
+  # Add a deploy stage below as needed, for example to Azure App Service
+  # - stage: Deploy
+  #   jobs:
+  #     - deployment: DeployWeb
+  #       environment: 'production'
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - download: current
+  #                 artifact: frontend
+  #               - download: current
+  #                 artifact: backend
+  #               # Add deployment steps here
