@@ -42,7 +42,8 @@ export default function DevicesPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:8080/api/devices', {
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const res = await fetch(`${API_BASE_URL}/api/devices`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (!res.ok) throw new Error('Failed to fetch devices');
