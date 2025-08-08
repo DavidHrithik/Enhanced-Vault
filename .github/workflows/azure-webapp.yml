@@ -1,0 +1,55 @@
+name: Build and deploy Java + React app to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build React frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      # Copy frontend build to backend static resources
+      - name: Copy frontend build to backend static
+        run: |
+          rm -rf backend/src/main/resources/static/*
+          cp -r frontend/build/* backend/src/main/resources/static/
+
+      # Build Spring Boot backend
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build backend
+        run: |
+          cd backend
+          ./mvnw clean package -DskipTests || mvn clean package -DskipTests
+
+      # Deploy to Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: CTS-VibeAppso41013-3
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: backend/target/*.jar
