@@ -70,7 +70,8 @@ export default function DevicesPage() {
     try {
       setLoading(true);
       setError("");
-      const res = await fetch(`http://localhost:8080/api/devices/${device.id}/owner`, {
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    const res = await fetch(`${API_BASE_URL}/api/devices/${device.id}/owner`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

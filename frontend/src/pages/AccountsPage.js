@@ -35,7 +35,8 @@ export default function AccountsPage() {
   const fetchAccounts = async () => {
     setLoading(true);
     try {
-      const res = await authFetch("http://localhost:8080/api/accounts/search");
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    const res = await authFetch(`${API_BASE_URL}/api/accounts/search`);
       const data = await res.json();
       setAccounts(data);
     } catch (err) {
@@ -75,7 +76,8 @@ export default function AccountsPage() {
   const confirmDelete = async () => {
     if (!pendingDelete) return;
     try {
-      await authFetch(`http://localhost:8080/api/accounts/${pendingDelete}`, { method: 'DELETE' });
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    await authFetch(`${API_BASE_URL}/api/accounts/${pendingDelete}`, { method: 'DELETE' });
       showToast("Account deleted");
       fetchAccounts();
     } catch {
@@ -88,14 +90,15 @@ export default function AccountsPage() {
 
   const handleModalSubmit = async (form, done) => {
     try {
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
       if (editAccount) {
-        await authFetch(`http://localhost:8080/api/accounts/${editAccount.id}`, {
+        await authFetch(`${API_BASE_URL}/api/accounts/${editAccount.id}`, {
           method: 'PUT',
           body: JSON.stringify({ ...form, owner: form.owner })
         });
         showToast("Account updated");
       } else {
-        await authFetch("http://localhost:8080/api/accounts", {
+        await authFetch(`${API_BASE_URL}/api/accounts`, {
           method: 'POST',
           body: JSON.stringify({ ...form, owner: form.owner })
         });
