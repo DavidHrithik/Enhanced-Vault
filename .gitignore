@@ -1,0 +1,30 @@
+# Java
+backend/target/
+*.class
+
+# Node.js
+frontend/node_modules/
+
+# Environment files
+*.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Uploads (if you want to exclude them from git)
+uploads/
+
+# Logs
+*.log
+
+# IDE files
+.idea/
+.vscode/
+
+# Build output
+/dist/
+/build/
+
+# Cache
+frontend/.cache/
