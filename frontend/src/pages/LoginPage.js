@@ -24,7 +24,7 @@ const LoginPage = () => {
     setLoading(true);
     console.log('Login attempt:', username, password);
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ;
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
     const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

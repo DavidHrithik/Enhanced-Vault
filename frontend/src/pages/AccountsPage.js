@@ -35,7 +35,7 @@ export default function AccountsPage() {
   const fetchAccounts = async () => {
     setLoading(true);
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
     const res = await authFetch(`${API_BASE_URL}/api/accounts/search`);
       const data = await res.json();
       setAccounts(data);
@@ -76,7 +76,7 @@ export default function AccountsPage() {
   const confirmDelete = async () => {
     if (!pendingDelete) return;
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
     await authFetch(`${API_BASE_URL}/api/accounts/${pendingDelete}`, { method: 'DELETE' });
       showToast("Account deleted");
       fetchAccounts();
@@ -90,7 +90,7 @@ export default function AccountsPage() {
 
   const handleModalSubmit = async (form, done) => {
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
       if (editAccount) {
         await authFetch(`${API_BASE_URL}/api/accounts/${editAccount.id}`, {
           method: 'PUT',

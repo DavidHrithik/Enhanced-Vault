@@ -42,7 +42,7 @@ export default function DevicesPage() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
       const res = await fetch(`${API_BASE_URL}/api/devices`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
@@ -71,7 +71,7 @@ export default function DevicesPage() {
     try {
       setLoading(true);
       setError("");
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
     const res = await fetch(`${API_BASE_URL}/api/devices/${device.id}/owner`, {
         method: 'PUT',
         headers: {
