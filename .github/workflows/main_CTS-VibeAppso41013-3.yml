@@ -46,10 +46,14 @@ jobs:
         run: |
           ./mvnw clean package -DskipTests || mvn clean package -DskipTests
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       # Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: CTS-VibeAppso41013-3
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: backend/target/*.jar
