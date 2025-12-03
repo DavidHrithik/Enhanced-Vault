@@ -58,6 +58,9 @@ class AuthenticationTests {
     @MockBean
     private com.testmanagementtool.repository.SystemConfigRepository systemConfigRepository;
 
+    @MockBean
+    private com.testmanagementtool.repository.DeviceLogRepository deviceLogRepository;
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 

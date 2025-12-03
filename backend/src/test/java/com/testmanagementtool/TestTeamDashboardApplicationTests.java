@@ -31,6 +31,9 @@ class TestTeamDashboardApplicationTests {
 	@MockBean
 	private com.testmanagementtool.repository.SystemConfigRepository systemConfigRepository;
 
+	@MockBean
+	private com.testmanagementtool.repository.DeviceLogRepository deviceLogRepository;
+
 	@Test
 	void contextLoads() {
 	}

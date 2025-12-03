@@ -23,72 +23,72 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class DeviceControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @org.springframework.boot.test.mock.mockito.MockBean
-    private DeviceRepository deviceRepository;
+        @org.springframework.boot.test.mock.mockito.MockBean
+        private DeviceRepository deviceRepository;
 
-    @org.springframework.boot.test.mock.mockito.MockBean
-    private DeviceLogRepository deviceLogRepository;
+        @org.springframework.boot.test.mock.mockito.MockBean
+        private DeviceLogRepository deviceLogRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @BeforeEach
-    public void setup() {
-        // Mocks are reset automatically by @MockBean
-    }
+        @BeforeEach
+        public void setup() {
+                // Mocks are reset automatically by @MockBean
+        }
 
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    public void testCreateDeviceCreatesLog() throws Exception {
-        Device device = new Device();
-        device.setModel("Test Device");
-        device.setOwner("None");
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        public void testCreateDeviceCreatesLog() throws Exception {
+                Device device = new Device();
+                device.setModel("Test Device");
+                device.setOwner("None");
 
-        Device savedDevice = new Device();
-        savedDevice.setId(UUID.randomUUID());
-        savedDevice.setModel("Test Device");
-        savedDevice.setOwner("None");
-        savedDevice.setStatus("Available");
+                Device savedDevice = new Device();
+                savedDevice.setId(UUID.randomUUID());
+                savedDevice.setModel("Test Device");
+                savedDevice.setOwner("None");
+                savedDevice.setStatus("Available");
 
-        org.mockito.Mockito.when(deviceRepository.save(org.mockito.ArgumentMatchers.any(Device.class)))
-                .thenReturn(savedDevice);
+                org.mockito.Mockito.when(deviceRepository.save(org.mockito.ArgumentMatchers.any(Device.class)))
+                                .thenReturn(savedDevice);
 
-        mockMvc.perform(post("/api/devices")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(device)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("Available"));
+                mockMvc.perform(post("/api/devices")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(device)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status").value("Available"));
 
-        org.mockito.Mockito.verify(deviceLogRepository, org.mockito.Mockito.times(1))
-                .save(org.mockito.ArgumentMatchers.any(com.testmanagementtool.model.DeviceLog.class));
-    }
+                org.mockito.Mockito.verify(deviceLogRepository, org.mockito.Mockito.times(1))
+                                .save(org.mockito.ArgumentMatchers.any(com.testmanagementtool.model.DeviceLog.class));
+        }
 
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    public void testUpdateOwnerUpdatesStatusAndLog() throws Exception {
-        UUID id = UUID.randomUUID();
-        Device device = new Device();
-        device.setId(id);
-        device.setModel("Test Device");
-        device.setStatus("Available");
+        @Test
+        @WithMockUser(roles = "ADMIN")
+        public void testUpdateOwnerUpdatesStatusAndLog() throws Exception {
+                UUID id = UUID.randomUUID();
+                Device device = new Device();
+                device.setId(id);
+                device.setModel("Test Device");
+                device.setStatus("Available");
 
-        org.mockito.Mockito.when(deviceRepository.findById(id)).thenReturn(java.util.Optional.of(device));
-        org.mockito.Mockito.when(deviceRepository.save(org.mockito.ArgumentMatchers.any(Device.class)))
-                .thenAnswer(i -> i.getArguments()[0]);
+                org.mockito.Mockito.when(deviceRepository.findById(id)).thenReturn(java.util.Optional.of(device));
+                org.mockito.Mockito.when(deviceRepository.save(org.mockito.ArgumentMatchers.any(Device.class)))
+                                .thenAnswer(i -> i.getArguments()[0]);
 
-        Device update = new Device();
-        update.setOwner("New Owner");
+                Device update = new Device();
+                update.setOwner("New Owner");
 
-        mockMvc.perform(put("/api/devices/" + id + "/owner")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(update)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("In Use"));
+                mockMvc.perform(put("/api/devices/" + id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(update)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.status").value("In Use"));
 
-        org.mockito.Mockito.verify(deviceLogRepository, org.mockito.Mockito.times(1))
-                .save(org.mockito.ArgumentMatchers.any(com.testmanagementtool.model.DeviceLog.class));
-    }
+                org.mockito.Mockito.verify(deviceLogRepository, org.mockito.Mockito.times(2))
+                                .save(org.mockito.ArgumentMatchers.any(com.testmanagementtool.model.DeviceLog.class));
+        }
 }
