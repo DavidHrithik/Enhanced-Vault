@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { motion } from "framer-motion";
-
-const environments = ["SIT", "QA1", "QA2", "QA3", "QA4", "DEV", "Preprod", "Preprod2"];
+import { API_BASE_URL } from "../utils/config";
 
 export default function AccountModal({ open, onClose, onSubmit, initial, originPosition }) {
   // Compute modal animation origin
@@ -27,6 +26,26 @@ export default function AccountModal({ open, onClose, onSubmit, initial, originP
       setShowContent(false);
     }
   }, [open]);
+  const [environments, setEnvironments] = useState([]);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+
+        const [envRes, roleRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/api/options/ENVIRONMENT`),
+          fetch(`${API_BASE_URL}/api/options/ROLE`)
+        ]);
+        if (envRes.ok) setEnvironments(await envRes.json());
+        if (roleRes.ok) setRoles(await roleRes.json());
+      } catch (e) {
+        console.error("Failed to fetch options", e);
+      }
+    };
+    fetchOptions();
+  }, []);
+
   const [form, setForm] = useState({
     username: initial?.username || "",
     password: initial?.password || "",
@@ -152,7 +171,7 @@ export default function AccountModal({ open, onClose, onSubmit, initial, originP
                     disabled={loading}
                   >
                     {environments.map((env) => (
-                      <option key={env} value={env}>{env}</option>
+                      <option key={env.id} value={env.value}>{env.value}</option>
                     ))}
                   </select>
                   {errors.environment && <div className="text-red-500 text-xs">{errors.environment}</div>}
@@ -177,32 +196,22 @@ export default function AccountModal({ open, onClose, onSubmit, initial, originP
                 <div>
                   <label className="block font-bold text-blue-200 mb-1">Role</label>
                   <div className="flex flex-wrap gap-2 mb-1">
-                    {[
-                      "Hospital admin",
-                      "Surgeon",
-                      "Support Staff",
-                      "ICadmin",
-                      "IcTechnician",
-                      "SN Admin",
-                      "SN Manager",
-                      "SN Reviewer",
-                      "SN CLoud support"
-                    ].map(role => (
+                    {roles.map(role => (
                       <button
-                        key={role}
+                        key={role.id}
                         type="button"
-                        className={`px-3 py-1 rounded-full border text-xs font-bold transition-all ${form.role.includes(role) ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100'}`}
+                        className={`px-3 py-1 rounded-full border text-xs font-bold transition-all ${form.role.includes(role.value) ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-100'}`}
                         onClick={() => {
                           setForm({
                             ...form,
-                            role: form.role.includes(role)
-                              ? form.role.filter(r => r !== role)
-                              : [...form.role, role]
+                            role: form.role.includes(role.value)
+                              ? form.role.filter(r => r !== role.value)
+                              : [...form.role, role.value]
                           });
                         }}
                         disabled={loading}
                       >
-                        {role}
+                        {role.value}
                       </button>
                     ))}
                   </div>

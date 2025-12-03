@@ -5,13 +5,13 @@ import AccountModal from "../components/AccountModal";
 import { useToast } from "../context/ToastContext";
 import * as XLSX from "xlsx";
 
-const environments = ["SIT", "QA1", "QA2", "QA3", "QA4", "DEV", "Preprod", "Preprod2"];
+
 
 import { useNavigate } from "react-router-dom";
 
 import BackNav from "../components/BackNav";
 import UserStatus from "../components/UserStatus";
-
+import { API_BASE_URL } from "../utils/config";
 export default function AccountsPage() {
   // ... existing state and hooks ...
   const [visiblePasswords, setVisiblePasswords] = useState({});
@@ -29,14 +29,26 @@ export default function AccountsPage() {
 
   useEffect(() => {
     fetchAccounts();
+    fetchEnvironments();
     // eslint-disable-next-line
   }, []);
+
+  const [environments, setEnvironments] = useState([]);
+  const fetchEnvironments = async () => {
+    try {
+
+      const res = await fetch(`${API_BASE_URL}/api/options/ENVIRONMENT`);
+      if (res.ok) setEnvironments(await res.json());
+    } catch (e) {
+      console.error("Failed to fetch environments", e);
+    }
+  };
 
   const fetchAccounts = async () => {
     setLoading(true);
     try {
-      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
-    const res = await authFetch(`${API_BASE_URL}/api/accounts/search`);
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      const res = await authFetch(`${API_BASE_URL}/api/accounts/search`);
       const data = await res.json();
       setAccounts(data);
     } catch (err) {
@@ -76,8 +88,8 @@ export default function AccountsPage() {
   const confirmDelete = async () => {
     if (!pendingDelete) return;
     try {
-      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
-    await authFetch(`${API_BASE_URL}/api/accounts/${pendingDelete}`, { method: 'DELETE' });
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+      await authFetch(`${API_BASE_URL}/api/accounts/${pendingDelete}`, { method: 'DELETE' });
       showToast("Account deleted");
       fetchAccounts();
     } catch {
@@ -90,7 +102,7 @@ export default function AccountsPage() {
 
   const handleModalSubmit = async (form, done) => {
     try {
-      const API_BASE_URL = 'https://cts-vibeappso41013-3.azurewebsites.net';
+      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
       if (editAccount) {
         await authFetch(`${API_BASE_URL}/api/accounts/${editAccount.id}`, {
           method: 'PUT',
@@ -136,14 +148,29 @@ export default function AccountsPage() {
       </div>
       <BackNav className="mb-6" />
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pb-12">
-  
+
         <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl">
-  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#a7c7e7] via-[#5f5aa2] to-[#7ea4c7] animate-gradient">T.A.D.A.</span>
-</h1>
-<p className="text-lg text-cyan-200 mb-12 text-center max-w-2xl font-semibold">
-  Not all test accounts are here yet—see which secret agents made it to T.A.D.A.!
-</p>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#a7c7e7] via-[#5f5aa2] to-[#7ea4c7] animate-gradient">T.A.D.A.</span>
+        </h1>
+        <p className="text-lg text-cyan-200 mb-12 text-center max-w-2xl font-semibold">
+          Not all test accounts are here yet—see which secret agents made it to T.A.D.A.!
+        </p>
         <div className="w-full max-w-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 mb-12 overflow-x-auto">
+          <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-[#5f5aa2] to-[#a7c7e7] rounded-lg shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#232946]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+              </div>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-cyan-200">
+                Credentials Repository
+              </span>
+            </h2>
+            <div className="hidden md:block text-cyan-200/60 text-sm font-mono bg-[#232946]/50 px-3 py-1 rounded-full border border-white/5">
+              {accounts.length} Active Agents
+            </div>
+          </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="w-full">
               <input
@@ -189,93 +216,93 @@ export default function AccountsPage() {
                   </tr>
                 ) : (
                   accounts
-  .filter(account => !envFilter || account.environment === envFilter)
-  .filter(account => {
-    const q = search.toLowerCase();
-    return (
-      !search ||
-      (account.username && account.username.toLowerCase().includes(q)) ||
-      (account.environment && account.environment.toLowerCase().includes(q)) ||
-      (account.owner && account.owner.toLowerCase().includes(q)) ||
-      (Array.isArray(account.role) && account.role.some(r => r && r.toLowerCase().includes(q)))
-    );
-  })
-  .map(account => (
-                    <tr key={account.id} className="hover:bg-[#232946]/40 transition-all">
-                      <td className="px-4 py-2 font-medium text-white/90 min-w-[180px]">{account.username}</td>
-                      <td className="px-4 py-2 text-white/80 font-mono tracking-widest min-w-[140px] flex items-center gap-2">
-  {visiblePasswords[account.id] ? (account.password || '') : '••••••••••'}
-  <button
-    className="focus:outline-none p-1 transition-all flex items-center justify-center"
-    style={{
-      background: 'none',
-      border: 'none',
-      color: 'var(--accent, #a7c7e7)',
-      minWidth: 28,
-      minHeight: 28,
-      lineHeight: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      transition: 'color 0.2s'
-    }}
-    onMouseEnter={e => e.currentTarget.style.color = 'var(--primary-text, #232946)'}
-    onMouseLeave={e => e.currentTarget.style.color = 'var(--accent, #a7c7e7)'}
-    aria-label={visiblePasswords[account.id] ? 'Hide password' : 'Show password'}
-    title={visiblePasswords[account.id] ? 'Hide password' : 'Show password'}
-    onClick={() => setVisiblePasswords(v => ({ ...v, [account.id]: !v[account.id] }))}
-    type="button"
-  >
-    <motion.div
-      initial={false}
-      animate={{ rotate: visiblePasswords[account.id] ? 360 : 0, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-      style={{ display: 'inline-block' }}
-    >
-      {visiblePasswords[account.id] ? (
-        // Eye open
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1.5 12s3.5-7 10.5-7 10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z" />
-          <circle cx="12" cy="12" r="3.5" strokeWidth={2} />
-        </svg>
-      ) : (
-        // Eye-off (slashed eye)
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.94 17.94A10.06 10.06 0 0112 20.5c-7 0-10.5-7-10.5-7a17.47 17.47 0 014.06-5.94M1.5 12s3.5-7 10.5-7 10.5 7 10.5 7a17.47 17.47 0 01-4.06 5.94M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <motion.line
-            x1="4" y1="4" x2="20" y2="20"
-            stroke="#a7c7e7" strokeWidth="2" strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.3 }}
-          />
-        </svg>
-      )}
-    </motion.div>
-  </button>
-</td>
-                      <td className="px-4 py-2 text-white/80 min-w-[120px]">{account.environment}</td>
-                      <td className="px-4 py-2 text-white/80 min-w-[150px]">{account.owner || <span className="text-[#a7c7e7]">—</span>}</td>
-                      <td className="px-4 py-2 text-white/80 min-w-[150px]">{account.role?.join(", ") || <span className="text-[#a7c7e7]">None</span>}</td>
-                      <td className="px-4 py-2 min-w-[140px]">
-  <div className="flex flex-wrap gap-2 items-center justify-start">
-    <button
-                            className="flex items-center gap-1 bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold px-3 py-1 rounded-xl shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
-                            onClick={e => handleEdit(account, e)}
-                          >
-                            Edit
-                          </button>
+                    .filter(account => !envFilter || account.environment === envFilter)
+                    .filter(account => {
+                      const q = search.toLowerCase();
+                      return (
+                        !search ||
+                        (account.username && account.username.toLowerCase().includes(q)) ||
+                        (account.environment && account.environment.toLowerCase().includes(q)) ||
+                        (account.owner && account.owner.toLowerCase().includes(q)) ||
+                        (Array.isArray(account.role) && account.role.some(r => r && r.toLowerCase().includes(q)))
+                      );
+                    })
+                    .map(account => (
+                      <tr key={account.id} className="hover:bg-[#232946]/40 transition-all">
+                        <td className="px-4 py-2 font-medium text-white/90 min-w-[180px] max-w-[250px] truncate" title={account.username}>{account.username}</td>
+                        <td className="px-4 py-2 text-white/80 font-mono tracking-widest min-w-[140px] flex items-center gap-2">
+                          {visiblePasswords[account.id] ? (account.password || '') : '••••••••••'}
                           <button
-                            className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-400 text-white font-bold px-3 py-1 rounded-xl shadow-lg hover:from-pink-400 hover:to-red-500 transition-all duration-200"
-                            onClick={() => handleDelete(account.id)}
+                            className="focus:outline-none p-1 transition-all flex items-center justify-center"
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: 'var(--accent, #a7c7e7)',
+                              minWidth: 28,
+                              minHeight: 28,
+                              lineHeight: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              transition: 'color 0.2s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.color = 'var(--primary-text, #232946)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'var(--accent, #a7c7e7)'}
+                            aria-label={visiblePasswords[account.id] ? 'Hide password' : 'Show password'}
+                            title={visiblePasswords[account.id] ? 'Hide password' : 'Show password'}
+                            onClick={() => setVisiblePasswords(v => ({ ...v, [account.id]: !v[account.id] }))}
+                            type="button"
                           >
-                            Delete
+                            <motion.div
+                              initial={false}
+                              animate={{ rotate: visiblePasswords[account.id] ? 360 : 0, opacity: 1 }}
+                              transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+                              style={{ display: 'inline-block' }}
+                            >
+                              {visiblePasswords[account.id] ? (
+                                // Eye open
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1.5 12s3.5-7 10.5-7 10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z" />
+                                  <circle cx="12" cy="12" r="3.5" strokeWidth={2} />
+                                </svg>
+                              ) : (
+                                // Eye-off (slashed eye)
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.94 17.94A10.06 10.06 0 0112 20.5c-7 0-10.5-7-10.5-7a17.47 17.47 0 014.06-5.94M1.5 12s3.5-7 10.5-7 10.5 7 10.5 7a17.47 17.47 0 01-4.06 5.94M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <motion.line
+                                    x1="4" y1="4" x2="20" y2="20"
+                                    stroke="#a7c7e7" strokeWidth="2" strokeLinecap="round"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                  />
+                                </svg>
+                              )}
+                            </motion.div>
                           </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                        <td className="px-4 py-2 text-white/80 min-w-[120px]">{account.environment}</td>
+                        <td className="px-4 py-2 text-white/80 min-w-[150px]">{account.owner || <span className="text-[#a7c7e7]">—</span>}</td>
+                        <td className="px-4 py-2 text-white/80 min-w-[150px]">{account.role?.join(", ") || <span className="text-[#a7c7e7]">None</span>}</td>
+                        <td className="px-4 py-2 min-w-[140px]">
+                          <div className="flex flex-wrap gap-2 items-center justify-start">
+                            <button
+                              className="flex items-center gap-1 bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold px-3 py-1 rounded-xl shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
+                              onClick={e => handleEdit(account, e)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-400 text-white font-bold px-3 py-1 rounded-xl shadow-lg hover:from-pink-400 hover:to-red-500 transition-all duration-200"
+                              onClick={() => handleDelete(account.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                 )}
               </tbody>
             </table>
@@ -293,7 +320,7 @@ export default function AccountsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="bg-white/20 backdrop-blur-lg border border-white/30 shadow-2xl rounded-2xl p-8 min-w-[320px] max-w-[90vw] flex flex-col items-center animate-modal-in">
               <h2 className="text-xl font-bold mb-4 text-center text-red-300">Delete Secret Agent?</h2>
-<p className="mb-6 text-cyan-200 text-center font-semibold">Not all test accounts can stay forever—are you sure you want to send this agent on a permanent vacation from T.A.D.A.?</p>
+              <p className="mb-6 text-cyan-200 text-center font-semibold">Not all test accounts can stay forever—are you sure you want to send this agent on a permanent vacation from T.A.D.A.?</p>
               <div className="flex gap-4 w-full justify-center">
                 <button
                   className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"

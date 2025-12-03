@@ -12,14 +12,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/accounts")
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class TestAccountController {
     @Autowired
     private TestAccountService service;
 
     @GetMapping("/search")
     public List<TestAccount> search(@RequestParam(required = false) String username,
-                                    @RequestParam(required = false) String environment) {
+            @RequestParam(required = false) String environment) {
         return service.search(username, environment);
     }
 

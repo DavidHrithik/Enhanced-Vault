@@ -24,10 +24,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("JwtAuthFilter: Processing request " + request.getMethod() + " " + request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
@@ -36,7 +36,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             jwt = authHeader.substring(7);
             try {
                 username = jwtUtil.extractUsername(jwt);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

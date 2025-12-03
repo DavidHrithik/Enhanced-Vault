@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class AuthController {
 
     @Autowired
@@ -35,11 +35,9 @@ public class AuthController {
         }
     }
 
-
     @Data
     static class LoginRequest {
         private String username;
         private String password;
     }
 }
-

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Test Management Tool
 
 A full-stack web application for managing devices, test cases, and test results, featuring a modern UI, robust backend, and extensible architecture.
@@ -41,21 +40,40 @@ The Test Management Tool is designed to help teams efficiently manage devices, t
 
 ## Architecture
 
-- **Frontend**: React (JavaScript)  
+- **Frontend**: React (JavaScript)
   Located in `/frontend`, provides the user interface and communicates with the backend via REST APIs.
-- **Backend**: Java Spring Boot  
+- **Backend**: Java Spring Boot
   Located in `/backend`, handles business logic, data persistence, and API endpoints.
-- **Database**:  
-  Default is SQLite (can be configured for other databases).
+- **Database**: MongoDB
+  Configured in `backend/src/main/resources/application.properties`.
 
 ---
 
 ## Prerequisites
 
-- Node.js (v16+ recommended)
-- npm (comes with Node.js)
-- Java 17+
-- Maven
+- **Java 17+** (Required for Backend)
+  - [Download JDK 17](https://www.oracle.com/java/technologies/downloads/#java17)
+  - Verify: `java -version`
+- **Node.js** (Required for Frontend)
+  - [Download Node.js](https://nodejs.org/en/download/) (v16+ recommended)
+  - Verify: `node -v`
+- **MongoDB** (Required for Database)
+  - [Download MongoDB Community](https://www.mongodb.com/try/download/community) or use [MongoDB Atlas](https://www.mongodb.com/atlas/database)
+  - Verify: `mongod --version` (if installed locally)
+- **Maven** (Required for Backend Build)
+  - **Option 1 (Homebrew - Recommended)**:
+    ```bash
+    brew install maven
+    ```
+  - **Option 2 (Manual)**:
+    1. [Download Apache Maven](https://maven.apache.org/download.cgi) (Binary zip archive).
+    2. Extract it to a folder (e.g., `/usr/local/apache-maven`).
+    3. Add the `bin` directory to your PATH in `~/.zshrc`:
+       ```bash
+       export PATH=/path/to/apache-maven/bin:$PATH
+       ```
+    4. Restart terminal.
+  - Verify: `mvn -version`
 
 ---
 
@@ -65,13 +83,14 @@ The Test Management Tool is designed to help teams efficiently manage devices, t
 
 ```bash
 git clone <your-repo-url>
-cd windsurf-project-enhanced
+cd TestTeamDashboard
 ```
 
 ### 2. Configure Environment Variables
 
 - Copy `.env.example` to `.env` in the project root.
 - Fill in your real values for both frontend and backend as required.
+- **Backend**: Set the `MONGODB_URI` environment variable or create a `application-local.properties` file (gitignored) in `backend/src/main/resources/` with your connection string.
 
 ---
 
@@ -112,9 +131,8 @@ npm start
 
 ## Database
 
-- Default: SQLite  
-- To use another database, modify the relevant configuration in your backend (e.g., `application.properties` for Spring Boot).
-- Database models are defined in the backend source code.
+- **MongoDB**: The application uses MongoDB for data persistence.
+- Configuration: `backend/src/main/resources/application.properties`.
 
 ---
 
@@ -138,44 +156,3 @@ npm start
 ## License
 
 This project is licensed under the MIT License.
-
----
-
-## Features
-
-- Download all accounts as an Excel file from the T.A.D.A. (Accounts) page using the "Download Excel" button.
-- Modern UI/UX with Marvel-style acronyms (T.A.D.A. and D.A.S.H.) and animated landing page.
-- Create and manage test cases
-- Define test steps for each test case
-- Track test execution status
-- Store expected and actual results
-- API documentation with Swagger UI
-
----
-
-## About
-
-**Google Drive Dataset Viewer & Test Management Tool** is a full-stack application for managing test accounts, datasets, and test results with modern UI, Google Drive integration, and Excel export capabilities.
-
----
-
-```bash
-uvicorn main:app --reload
-```
-
-3. Access the API documentation at:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-
-## API Endpoints
-
-- `GET /`: Welcome message
-- `POST /test-cases/`: Create a new test case
-- `GET /test-cases/`: List all test cases
-
-## Database
-
-The application uses SQLite by default, but can be configured to use other databases by modifying the `SQLALCHEMY_DATABASE_URL` in `database.py`.
-=======
-# Test-dashboard
->>>>>>> 2f22943617967741a357f22fa55a882ced60ed11

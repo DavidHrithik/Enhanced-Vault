@@ -18,9 +18,22 @@ public class JwtUtil {
     @Autowired
     private com.testmanagementtool.repository.UserRepository userRepository;
 
+    @org.springframework.beans.factory.annotation.Value("${jwt.secret}")
+    private String secretKey;
 
-    private final String SECRET_KEY = "secret_key_change_this";
     private final long EXPIRATION_TIME = 86400000; // 1 day
+
+    private java.security.Key getSigningKey() {
+        // Use the secret key directly as bytes if it's not Base64 encoded, or ensure it
+        // is long enough
+        byte[] keyBytes = secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        // Ensure key is long enough for HS256 (32 bytes / 256 bits)
+        if (keyBytes.length < 32) {
+            throw new IllegalArgumentException(
+                    "JWT secret key must be at least 32 bytes (256 bits) long for security.");
+        }
+        return io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -36,7 +49,11 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -59,7 +76,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

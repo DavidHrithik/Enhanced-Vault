@@ -13,4 +13,5 @@ public class Device {
     private String model;
     private String owner;
     private java.util.Date updatedDate;
+    private String status; // Available, In Use, Broken, Maintenance
 }
