@@ -1,28 +1,36 @@
 # Deployment Guide
 
-## Azure Web App Deployment
+This application is deployed using **Render** for the backend and **Vercel** for the frontend.
 
-This application is configured to deploy to an Azure Web App using GitHub Actions.
+## Backend (Render)
 
-### Prerequisites
+The backend is a Spring Boot application containerized with Docker. It is deployed on [Render](https://render.com).
 
-To successfully deploy, you must configure the `AZURE_CREDENTIALS` secret in your GitHub repository.
+### Configuration
+The deployment is defined in `render.yaml`:
+- **Service Name**: `test-management-backend`
+- **Type**: Web Service
+- **Runtime**: Docker
+- **Context**: `./backend`
+- **Environment Variables**:
+    - `MONGODB_URI`: Connection string for MongoDB.
+    - `JWT_SECRET`: Secret key for JWT authentication.
+    - `CORS_ALLOWED_ORIGINS`: Allowed frontend origins.
+    - `PORT`: `8080`
 
-1.  **Generate Credentials**: Run the following command in the Azure CLI (replace `{subscription-id}` and `{resource-group}` with your actual values):
+### Deployment
+Render automatically deploys the backend when changes are pushed to the `main` branch, based on the `render.yaml` blueprint.
 
-    ```bash
-    az ad sp create-for-rbac --name "myApp" --role contributor --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group} --sdk-auth
-    ```
+## Frontend (Vercel)
 
-2.  **Add Secret to GitHub**:
-    *   Go to your GitHub repository.
-    *   Navigate to **Settings** > **Secrets and variables** > **Actions**.
-    *   Click **New repository secret**.
-    *   Name: `AZURE_CREDENTIALS`
-    *   Value: Paste the entire JSON output from the command above.
-    *   Click **Add secret**.
+The frontend is a React application deployed on [Vercel](https://vercel.com).
 
-### Pipelines
+### Configuration
+The deployment is defined in `vercel.json`:
+- **Source**: `frontend/package.json`
+- **Build Command**: `npm run build`
+- **Output Directory**: `build`
+- **Routes**: Rewrites all requests to `/frontend/index.html` to support client-side routing.
 
-*   **GitHub Actions**: The primary deployment workflow is defined in `.github/workflows/main_CTS-VibeAppso41013-3.yml`.
-*   **Azure Pipelines**: `azure-pipelines.yml` is also present but may require additional configuration for the deployment stage.
+### Deployment
+Vercel automatically deploys the frontend when changes are pushed to the `main` branch. Ensure your Vercel project is connected to this repository.
