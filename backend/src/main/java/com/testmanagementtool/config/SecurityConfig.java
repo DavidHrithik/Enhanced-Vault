@@ -40,7 +40,9 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        configuration.setAllowedOriginPatterns(java.util.Arrays.asList(allowedOrigins.split(",")));
+        configuration.setAllowedOriginPatterns(java.util.Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .collect(java.util.stream.Collectors.toList()));
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(java.util.List.of("*"));
         configuration.setExposedHeaders(java.util.List.of("Authorization"));
@@ -48,6 +50,11 @@ public class SecurityConfig {
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public org.springframework.security.web.firewall.HttpFirewall httpFirewall() {
+        return new org.springframework.security.web.firewall.DefaultHttpFirewall();
     }
 
     @Bean

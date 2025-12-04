@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
+import { API_BASE_URL } from '../utils/config';
+
 const ConfigContext = createContext();
 
 export const useConfig = () => useContext(ConfigContext);
@@ -13,7 +15,6 @@ export const ConfigProvider = ({ children }) => {
 
     const fetchConfig = async () => {
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
             const response = await fetch(`${API_BASE_URL}/api/config`);
             if (response.ok) {
                 const data = await response.json();
@@ -28,7 +29,6 @@ export const ConfigProvider = ({ children }) => {
 
     const updateConfig = async (key, value) => {
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
             const response = await fetch(`${API_BASE_URL}/api/config`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
