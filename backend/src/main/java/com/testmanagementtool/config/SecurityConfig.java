@@ -21,8 +21,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/auth/login",
+                                "/**/api/auth/login")
+                        .permitAll()
+                        .requestMatchers("/api/auth/**", "/**/api/auth/**").permitAll()
                         .requestMatchers("/api/config/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/options/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()

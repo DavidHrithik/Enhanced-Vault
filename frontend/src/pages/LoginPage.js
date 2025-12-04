@@ -29,7 +29,8 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const cleanBaseUrl = API_BASE_URL.replace(/\/+$/, '');
+      const response = await fetch(`${cleanBaseUrl}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
