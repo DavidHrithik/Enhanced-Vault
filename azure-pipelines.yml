@@ -34,23 +34,23 @@ stages:
           - publish: $(backendPath)/target
             artifact: backend
 
-  - stage: Deploy
-    dependsOn: Build
-    jobs:
-      - deployment: DeployBackend
-        environment: 'production'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: backend
-                - task: AzureWebApp@1
-                  inputs:
-                    azureSubscription: '<YOUR_AZURE_SERVICE_CONNECTION_NAME>'
-                    appType: 'webAppLinux'
-                    appName: 'CTS-VibeAppso41013-3'
-                    package: '$(Pipeline.Workspace)/backend/backend-0.0.1-SNAPSHOT.jar'
+#   - stage: Deploy
+#     dependsOn: Build
+#     jobs:
+#       - deployment: DeployBackend
+#         environment: 'production'
+#         strategy:
+#           runOnce:
+#             deploy:
+#               steps:
+#                 - download: current
+#                   artifact: backend
+#                 - task: AzureWebApp@1
+#                   inputs:
+#                     azureSubscription: '<YOUR_AZURE_SERVICE_CONNECTION_NAME>'
+#                     appType: 'webAppLinux'
+#                     appName: 'CTS-VibeAppso41013-3'
+#                     package: '$(Pipeline.Workspace)/backend/backend-0.0.1-SNAPSHOT.jar'
 
   - main
 
