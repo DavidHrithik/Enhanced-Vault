@@ -11,12 +11,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
+
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 10)
 public class UrlNormalizationFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestUri = request.getRequestURI();

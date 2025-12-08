@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.Map;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -42,23 +43,54 @@ public class DeviceController {
         deviceLogRepository.save(log);
     }
 
+    private void logDeviceChange(UUID deviceId, String action, String oldValue, String newValue) {
+        String username = "System";
+        try {
+            username = SecurityContextHolder.getContext().getAuthentication().getName();
+        } catch (Exception e) {
+            // ignore
+        }
+        DeviceLog log = new DeviceLog();
+        log.setId(UUID.randomUUID());
+        log.setDeviceId(deviceId);
+        log.setAction(action);
+        log.setDetails("Changed from '" + oldValue + "' to '" + newValue + "'");
+        log.setPerformedBy(username);
+        log.setTimestamp(new java.util.Date());
+        deviceLogRepository.save(log);
+    }
+
     @GetMapping
-    public List<Device> getAll() {
+    public List<Device> getAllDevices() {
         // This will return all fields, including updatedDate, if present in MongoDB.
         return deviceRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Device> getDeviceById(@PathVariable @NonNull UUID id) {
+        return deviceRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Device> createDevice(@RequestBody Device device) {
+    public ResponseEntity<Device> createDevice(@RequestBody @NonNull Device device) {
         device.setId(UUID.randomUUID());
+        if (device.getOwner() == null) {
+            device.setOwner("None");
+        }
         device.setUpdatedDate(new java.util.Date());
         if (device.getStatus() == null) {
             device.setStatus("Available");
         }
-        Device saved = deviceRepository.save(device);
-        logAction(saved.getId(), "CREATED", "Device created with status: " + saved.getStatus());
-        return ResponseEntity.ok(saved);
+        Device savedDevice = deviceRepository.save(device);
+
+        // Log creation
+        logDeviceChange(savedDevice.getId(), "Device Created", "N/A",
+                savedDevice.getStatus() != null ? savedDevice.getStatus() : "Available");
+
+        return ResponseEntity.ok(savedDevice);
     }
 
     @DeleteMapping("/{id}")

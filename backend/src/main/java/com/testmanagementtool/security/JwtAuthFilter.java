@@ -4,6 +4,7 @@ import com.testmanagementtool.repository.UserRepository;
 import com.testmanagementtool.model.User;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         System.out.println("JwtAuthFilter: Processing request " + request.getMethod() + " " + request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");

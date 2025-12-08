@@ -12,4 +12,8 @@ public interface TestAccountRepository extends MongoRepository<TestAccount, UUID
     List<TestAccount> findByEnvironment(String environment);
 
     List<TestAccount> findByRoleContaining(String role);
+
+    List<TestAccount> findByUsernameContaining(String username);
+
+    List<TestAccount> findByUsernameContainingAndEnvironment(String username, String environment);
 }

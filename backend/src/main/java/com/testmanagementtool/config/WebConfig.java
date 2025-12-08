@@ -3,25 +3,31 @@ package com.testmanagementtool.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.util.Objects;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins}")
-    private String allowedOrigins;
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }
 
+    @Value("${cors.allowed-origins}")
+    private String allowedOrigins;
+
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/uploads/**")
-                .allowedOrigins(java.util.Arrays.stream(allowedOrigins.split(","))
-                        .map(String::trim)
-                        .toArray(String[]::new))
-                .allowedMethods("GET");
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns(Objects.requireNonNull(allowedOrigins).split(","))
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .exposedHeaders("Authorization")
+                .allowCredentials(true);
     }
 }

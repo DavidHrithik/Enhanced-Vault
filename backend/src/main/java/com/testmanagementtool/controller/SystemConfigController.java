@@ -3,7 +3,8 @@ package com.testmanagementtool.controller;
 import com.testmanagementtool.model.SystemConfig;
 import com.testmanagementtool.repository.SystemConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -11,20 +12,23 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/config")
-@CrossOrigin(origins = "*")
 public class SystemConfigController {
-
     @Autowired
-    private SystemConfigRepository systemConfigRepository;
+    private SystemConfigRepository repository;
 
     @GetMapping
     public Map<String, String> getAllConfigs() {
-        return systemConfigRepository.findAll().stream()
+        return repository.findAll().stream()
                 .collect(Collectors.toMap(SystemConfig::getKey, SystemConfig::getValue));
     }
 
     @PostMapping
-    public ResponseEntity<SystemConfig> updateConfig(@RequestBody SystemConfig config) {
-        return ResponseEntity.ok(systemConfigRepository.save(config));
+    public SystemConfig updateConfig(@RequestBody @NonNull SystemConfig config) {
+        SystemConfig existing = repository.findByKey(config.getKey());
+        if (existing != null) {
+            existing.setValue(config.getValue());
+            return repository.save(existing);
+        }
+        return repository.save(config);
     }
 }

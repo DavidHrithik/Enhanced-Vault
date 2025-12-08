@@ -15,28 +15,28 @@ public class DeviceInitializer implements CommandLineRunner {
     private DeviceRepository deviceRepository;
 
     @Override
+    @SuppressWarnings("null")
     public void run(String... args) {
         if (deviceRepository.count() == 0) {
             deviceRepository.saveAll(List.of(
-                newDevice("MACBook Air M2", "Alice"),
-                newDevice("MACBook Air M2", "Bob"),
-                newDevice("MACBook Air M2", "Charlie"),
-                newDevice("IPhone12", "David"),
-                newDevice("IPhone13", "Emma"),
-                newDevice("Galaxy", "Frank"),
-                newDevice("Galaxy", "Grace"),
-                newDevice("Intellio Tablet", "Helen"),
-                newDevice("Intellio Tablet", "Ivan"),
-                newDevice("Intellio Tablet", "Judy"),
-                newDevice("Ipad Air2", "Kevin"),
-                newDevice("Ipad Air2", "Laura"),
-                newDevice("Ipad Air2", "Mallory"),
-                newDevice("NOKIA Phone", "Nina"),
-                newDevice("NOKIA Phone", "Oscar"),
-                newDevice("NOKIA Phone", "Paul"),
-                newDevice("NOKIA Phone", "Quinn"),
-                newDevice("NOKIA Phone", "Rita")
-            ));
+                    newDevice("MACBook Air M2", "Alice"),
+                    newDevice("MACBook Air M2", "Bob"),
+                    newDevice("MACBook Air M2", "Charlie"),
+                    newDevice("IPhone12", "David"),
+                    newDevice("IPhone13", "Emma"),
+                    newDevice("Galaxy", "Frank"),
+                    newDevice("Galaxy", "Grace"),
+                    newDevice("Intellio Tablet", "Helen"),
+                    newDevice("Intellio Tablet", "Ivan"),
+                    newDevice("Intellio Tablet", "Judy"),
+                    newDevice("Ipad Air2", "Kevin"),
+                    newDevice("Ipad Air2", "Laura"),
+                    newDevice("Ipad Air2", "Mallory"),
+                    newDevice("NOKIA Phone", "Nina"),
+                    newDevice("NOKIA Phone", "Oscar"),
+                    newDevice("NOKIA Phone", "Paul"),
+                    newDevice("NOKIA Phone", "Quinn"),
+                    newDevice("NOKIA Phone", "Rita")));
         }
     }
 
@@ -45,7 +45,7 @@ public class DeviceInitializer implements CommandLineRunner {
         d.setId(UUID.randomUUID());
         d.setModel(model);
         d.setOwner(owner);
-d.setUpdatedDate(null);
+        d.setUpdatedDate(null);
         return d;
     }
 }
