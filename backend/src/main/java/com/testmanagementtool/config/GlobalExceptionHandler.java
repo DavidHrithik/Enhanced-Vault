@@ -22,4 +22,15 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
+
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNoResourceFoundException(
+            org.springframework.web.servlet.resource.NoResourceFoundException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Not Found");
+        response.put("message", "The requested resource was not found. Please check the URL.");
+        response.put("path", e.getResourcePath());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
 }
