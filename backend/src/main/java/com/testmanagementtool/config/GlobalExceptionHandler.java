@@ -17,6 +17,9 @@ public class GlobalExceptionHandler {
         response.put("error", "Internal Server Error");
         response.put("message", e.getMessage());
         response.put("exception", e.getClass().getName());
+        if (e.getCause() != null) {
+            response.put("cause", e.getCause().toString());
+        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
