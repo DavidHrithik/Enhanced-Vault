@@ -29,6 +29,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 @AutoConfigureMockMvc
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
         org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
+@SuppressWarnings("null")
 class SystemConfigControllerTest {
 
     @Autowired

@@ -4,6 +4,7 @@ import com.testmanagementtool.model.DropdownOption;
 import com.testmanagementtool.repository.DropdownOptionRepository;
 import com.testmanagementtool.model.TestAccount;
 import com.testmanagementtool.repository.TestAccountRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -31,11 +32,11 @@ public class DropdownOptionService {
         return repository.save(option);
     }
 
-    public void deleteOption(String id) {
+    public void deleteOption(@NonNull String id) {
         repository.deleteById(id);
     }
 
-    public DropdownOption updateOption(String id, String newValue) {
+    public DropdownOption updateOption(@NonNull String id, String newValue) {
         DropdownOption option = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Option not found"));
 

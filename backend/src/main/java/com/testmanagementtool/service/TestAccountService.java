@@ -35,6 +35,7 @@ public class TestAccountService {
         return repository.findById(id);
     }
 
+    @SuppressWarnings("null")
     public TestAccount create(TestAccount account) {
         return repository.save(account);
     }

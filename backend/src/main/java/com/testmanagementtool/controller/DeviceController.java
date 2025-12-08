@@ -43,6 +43,7 @@ public class DeviceController {
         deviceLogRepository.save(log);
     }
 
+    @SuppressWarnings("null")
     private void logDeviceChange(UUID deviceId, String action, String oldValue, String newValue) {
         String username = "System";
         try {
@@ -75,6 +76,7 @@ public class DeviceController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @SuppressWarnings("null")
     public ResponseEntity<Device> createDevice(@RequestBody @NonNull Device device) {
         device.setId(UUID.randomUUID());
         if (device.getOwner() == null) {

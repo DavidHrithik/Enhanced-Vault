@@ -33,6 +33,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 @org.springframework.test.context.ActiveProfiles("test")
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
         org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
+@SuppressWarnings("null")
 class DropdownOptionControllerTest {
 
     @Autowired

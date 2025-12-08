@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     private String allowedOrigins;
 
     @Override
+    @SuppressWarnings("null")
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOriginPatterns(Objects.requireNonNull(allowedOrigins).split(","))
