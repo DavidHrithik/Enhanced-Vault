@@ -10,6 +10,7 @@ import java.util.UUID;
 public class User {
     @Id
     private UUID id;
+    @org.springframework.data.mongodb.core.index.Indexed(unique = true)
     private String username;
     private String password;
     private String role;

@@ -16,19 +16,35 @@ public class SystemConfigController {
     @Autowired
     private SystemConfigRepository repository;
 
+    // Simple in-memory cache
+    private Map<String, String> configCache = null;
+    private long lastCacheUpdate = 0;
+    private static final long CACHE_TTL = 300000; // 5 minutes
+
     @GetMapping
     public Map<String, String> getAllConfigs() {
-        return repository.findAll().stream()
+        if (configCache != null && System.currentTimeMillis() - lastCacheUpdate < CACHE_TTL) {
+            return configCache;
+        }
+
+        configCache = repository.findAll().stream()
                 .collect(Collectors.toMap(SystemConfig::getKey, SystemConfig::getValue));
+        lastCacheUpdate = System.currentTimeMillis();
+        return configCache;
     }
 
     @PostMapping
     public SystemConfig updateConfig(@RequestBody @NonNull SystemConfig config) {
         SystemConfig existing = repository.findByKey(config.getKey());
+        SystemConfig saved;
         if (existing != null) {
             existing.setValue(config.getValue());
-            return repository.save(existing);
+            saved = repository.save(existing);
+        } else {
+            saved = repository.save(config);
         }
-        return repository.save(config);
+        // Invalidate cache
+        configCache = null;
+        return saved;
     }
 }
