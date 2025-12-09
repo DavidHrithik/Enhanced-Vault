@@ -32,16 +32,19 @@ public class DropdownOptionController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteOption(@PathVariable String id) {
+    public ResponseEntity<Void> deleteOption(@PathVariable @org.springframework.lang.NonNull String id) {
         service.deleteOption(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<DropdownOption> updateOption(@PathVariable String id,
+    public ResponseEntity<?> updateOption(@PathVariable @org.springframework.lang.NonNull String id,
             @RequestBody Map<String, String> payload) {
         String newValue = payload.get("value");
+        if (newValue == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Value is required"));
+        }
         return ResponseEntity.ok(service.updateOption(id, newValue));
     }
 }

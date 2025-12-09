@@ -43,7 +43,6 @@ public class DeviceController {
         deviceLogRepository.save(log);
     }
 
-    @SuppressWarnings("null")
     private void logDeviceChange(UUID deviceId, String action, String oldValue, String newValue) {
         String username = "System";
         try {
@@ -76,7 +75,7 @@ public class DeviceController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @SuppressWarnings("null")
+
     public ResponseEntity<Device> createDevice(@RequestBody @NonNull Device device) {
         device.setId(UUID.randomUUID());
         if (device.getOwner() == null) {
@@ -97,14 +96,14 @@ public class DeviceController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Void> deleteDevice(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteDevice(@PathVariable @NonNull UUID id) {
         deviceRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<?> updateDevice(@PathVariable UUID id, @RequestBody Device updated) {
+    public ResponseEntity<?> updateDevice(@PathVariable @NonNull UUID id, @RequestBody Device updated) {
         Optional<Device> deviceOpt = deviceRepository.findById(id);
         if (deviceOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -161,7 +160,7 @@ public class DeviceController {
 
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<?> updateStatus(@PathVariable UUID id, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<?> updateStatus(@PathVariable @NonNull UUID id, @RequestBody Map<String, String> payload) {
         Optional<Device> deviceOpt = deviceRepository.findById(id);
         if (deviceOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

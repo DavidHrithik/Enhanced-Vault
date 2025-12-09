@@ -24,6 +24,28 @@ const LoginPage = () => {
     }
   }, [navigate]);
 
+  const [loadingText, setLoadingText] = useState('Logging in...');
+
+  React.useEffect(() => {
+    let interval;
+    if (loading) {
+      const messages = [
+        "Logging in...",
+        "Hang on...",
+        "Free tier takes time...",
+        "Waking up the server...",
+        "Almost there..."
+      ];
+      let i = 0;
+      setLoadingText(messages[0]);
+      interval = setInterval(() => {
+        i = (i + 1) % messages.length;
+        setLoadingText(messages[i]);
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -108,7 +130,7 @@ const LoginPage = () => {
               className="w-full bg-gradient-to-r from-[#232946] via-[#5f5aa2] to-[#15161c] text-[#a7c7e7] font-bold py-2 rounded-xl shadow-lg hover:from-[#5f5aa2] hover:to-[#a7c7e7] hover:text-white transition-all duration-200 disabled:opacity-60 border border-[#a7c7e7]/30"
               disabled={loading}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? loadingText : 'Login'}
             </button>
           </form>
         </div>

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
+import com.testmanagementtool.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @RestController
 @RequestMapping("/api/auth")
 
@@ -20,9 +23,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private com.testmanagementtool.repository.UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
