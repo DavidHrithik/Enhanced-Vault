@@ -2,6 +2,8 @@ package com.testmanagementtool.service;
 
 import com.testmanagementtool.model.TestAccount;
 import com.testmanagementtool.repository.TestAccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Service
 public class TestAccountService {
+    private static final Logger logger = LoggerFactory.getLogger(TestAccountService.class);
+
     @Autowired
     private TestAccountRepository repository;
 
@@ -45,8 +49,7 @@ public class TestAccountService {
         return account;
     }
 
-    @SuppressWarnings("null")
-    public TestAccount create(TestAccount account) {
+    public TestAccount create(@NonNull TestAccount account) {
         if (account.getId() == null) {
             account.setId(UUID.randomUUID());
         }
@@ -71,8 +74,9 @@ public class TestAccountService {
             try {
                 account.setPassword(cryptoService.decrypt(account.getPassword()));
             } catch (Exception e) {
-                // Ignore decryption errors for now (e.g. legacy data)
-                // Or log it
+                // Log the error but don't crash, so the account is still usable (with encrypted
+                // password or as is)
+                logger.error("Error decrypting password for account {}: {}", account.getId(), e.getMessage());
             }
         }
     }

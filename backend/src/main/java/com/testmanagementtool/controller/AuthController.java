@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
 import com.testmanagementtool.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -28,7 +31,7 @@ public class AuthController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
         var userOpt = userRepository.findByUsername(request.getUsername());
         if (userOpt.isPresent() && passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             String token = jwtUtil.generateToken(request.getUsername());
@@ -40,7 +43,9 @@ public class AuthController {
 
     @Data
     static class LoginRequest {
+        @NotBlank(message = "Username is required")
         private String username;
+        @NotBlank(message = "Password is required")
         private String password;
     }
 }

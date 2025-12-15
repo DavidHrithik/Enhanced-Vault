@@ -30,11 +30,11 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 
 @SpringBootTest(properties = "spring.data.mongodb.uri=mongodb://localhost:27017/test")
 @AutoConfigureMockMvc
-@org.springframework.test.context.ActiveProfiles("test")
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-        org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
 @SuppressWarnings("null")
 class DropdownOptionControllerTest {
+
+    @MockBean
+    private org.springframework.data.mongodb.core.mapping.MongoMappingContext mongoMappingContext;
 
     @Autowired
     private MockMvc mockMvc;

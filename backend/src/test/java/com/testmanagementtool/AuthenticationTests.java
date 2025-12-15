@@ -23,16 +23,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-
 @SpringBootTest(properties = "spring.data.mongodb.uri=mongodb://localhost:27017/test")
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-        org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
 @SuppressWarnings("null")
 class AuthenticationTests {
+
+    @MockBean
+    private org.springframework.data.mongodb.core.mapping.MongoMappingContext mongoMappingContext;
 
     @Autowired
     private MockMvc mockMvc;

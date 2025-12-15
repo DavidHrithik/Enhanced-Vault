@@ -6,10 +6,7 @@ import com.testmanagementtool.repository.UserRepository;
 import com.testmanagementtool.security.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,8 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.anyString;
+import static com.testmanagementtool.util.TestConstants.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,8 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-        MongoRepositoriesAutoConfiguration.class })
 @SuppressWarnings("null")
 public class AuthControllerTest {
 
@@ -64,16 +58,16 @@ public class AuthControllerTest {
 
     @Test
     public void testLoginSuccess() throws Exception {
-        String username = "admin";
-        String password = "password";
+        String username = TEST_USERNAME;
+        String password = TEST_PASSWORD;
         User user = new User();
         user.setId(UUID.randomUUID());
         user.setUsername(username);
-        user.setPassword("encodedPassword");
+        user.setPassword(TEST_ENCODED_PASSWORD);
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(true);
-        when(jwtUtil.generateToken(username)).thenReturn("mock.jwt.token");
+        when(passwordEncoder.matches(password, TEST_ENCODED_PASSWORD)).thenReturn(true);
+        when(jwtUtil.generateToken(username)).thenReturn(TEST_TOKEN);
 
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("username", username);
@@ -83,19 +77,19 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("mock.jwt.token"));
+                .andExpect(jsonPath("$.token").value(TEST_TOKEN));
     }
 
     @Test
     public void testLoginFailure() throws Exception {
-        String username = "admin";
+        String username = TEST_USERNAME;
         String password = "wrongpassword";
         User user = new User();
         user.setUsername(username);
-        user.setPassword("encodedPassword");
+        user.setPassword(TEST_ENCODED_PASSWORD);
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(false);
+        when(passwordEncoder.matches(password, TEST_ENCODED_PASSWORD)).thenReturn(false);
 
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("username", username);

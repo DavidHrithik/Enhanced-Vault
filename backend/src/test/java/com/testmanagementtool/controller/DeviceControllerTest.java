@@ -30,10 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-                MongoRepositoriesAutoConfiguration.class })
 @SuppressWarnings("null")
 public class DeviceControllerTest {
+
+        @MockBean
+        private org.springframework.data.mongodb.core.mapping.MongoMappingContext mongoMappingContext;
 
         @Autowired
         private MockMvc mockMvc;

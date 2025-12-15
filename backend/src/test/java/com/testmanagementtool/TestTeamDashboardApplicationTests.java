@@ -6,15 +6,13 @@ import com.testmanagementtool.repository.DeviceRepository;
 import com.testmanagementtool.repository.TestAccountRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @SpringBootTest(properties = "spring.data.mongodb.uri=mongodb://localhost:27017/test")
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-		org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
 class TestTeamDashboardApplicationTests {
+
+	@MockBean
+	private MongoMappingContext mongoMappingContext;
 
 	@MockBean
 	private UserRepository userRepository;

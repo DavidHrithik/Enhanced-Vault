@@ -45,6 +45,9 @@ public class TestAccountValidationTest {
     @MockBean
     private com.testmanagementtool.security.JwtAuthFilter jwtAuthFilter;
 
+    @MockBean
+    private org.springframework.data.mongodb.core.mapping.MongoMappingContext mongoMappingContext;
+
     @Test
     @WithMockUser
     public void createAccount_InvalidInput_Returns400() throws Exception {

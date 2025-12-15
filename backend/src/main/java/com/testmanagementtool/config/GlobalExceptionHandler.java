@@ -13,13 +13,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
+        // In production, you might want to log this but return a generic message
+        // logger.error("Unhandled exception", e);
         Map<String, String> response = new HashMap<>();
         response.put("error", "Internal Server Error");
-        response.put("message", e.getMessage());
-        response.put("exception", e.getClass().getName());
-        if (e.getCause() != null) {
-            response.put("cause", e.getCause().toString());
-        }
+        response.put("message", "An unexpected error occurred.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 

@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@lombok.EqualsAndHashCode(callSuper = true)
 @Document(collection = "test_accounts")
-public class TestAccount {
+public class TestAccount extends BaseEntity {
     @Id
     private UUID id;
     @jakarta.validation.constraints.NotBlank(message = "Username is required")
