@@ -22,7 +22,8 @@ public class UserInitializer implements CommandLineRunner {
             User admin = new User();
             admin.setId(UUID.randomUUID());
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            String adminPwd = System.getenv("ADMIN_PASSWORD") != null ? System.getenv("ADMIN_PASSWORD") : "admin123";
+            admin.setPassword(passwordEncoder.encode(adminPwd));
             admin.setRole("ADMIN");
             userRepository.save(admin);
         }
@@ -30,7 +31,8 @@ public class UserInitializer implements CommandLineRunner {
             User user = new User();
             user.setId(UUID.randomUUID());
             user.setUsername("user");
-            user.setPassword(passwordEncoder.encode("user123"));
+            String userPwd = System.getenv("USER_PASSWORD") != null ? System.getenv("USER_PASSWORD") : "user123";
+            user.setPassword(passwordEncoder.encode(userPwd));
             user.setRole("USER");
             userRepository.save(user);
         }

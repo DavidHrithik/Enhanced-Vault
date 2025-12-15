@@ -5,6 +5,10 @@ import com.testmanagementtool.model.SystemConfig;
 import com.testmanagementtool.repository.SystemConfigRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -21,16 +25,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-
-@SpringBootTest(properties = "spring.data.mongodb.uri=mongodb://localhost:27017/test")
+@SpringBootTest
 @AutoConfigureMockMvc
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class,
-        org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration.class })
+        MongoRepositoriesAutoConfiguration.class })
 @SuppressWarnings("null")
-class SystemConfigControllerTest {
+public class SystemConfigControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,56 +39,46 @@ class SystemConfigControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private SystemConfigRepository systemConfigRepository;
+    private SystemConfigRepository repository;
 
     @MockBean
     private com.testmanagementtool.repository.UserRepository userRepository;
-
     @MockBean
     private com.testmanagementtool.repository.DeviceRepository deviceRepository;
-
+    @MockBean
+    private com.testmanagementtool.repository.DeviceLogRepository deviceLogRepository;
     @MockBean
     private com.testmanagementtool.repository.TestAccountRepository testAccountRepository;
-
     @MockBean
     private com.testmanagementtool.repository.DropdownOptionRepository dropdownOptionRepository;
 
-    @MockBean
-    private com.testmanagementtool.repository.DeviceLogRepository deviceLogRepository;
-
     @Test
-    void testGetAllConfigs() throws Exception {
-        SystemConfig config1 = new SystemConfig();
-        config1.setKey("appName");
-        config1.setValue("Test Dashboard");
+    public void testGetAllConfigs() throws Exception {
+        SystemConfig config = new SystemConfig();
+        config.setKey("APP_NAME");
+        config.setValue("My Test App");
 
-        SystemConfig config2 = new SystemConfig();
-        config2.setKey("theme");
-        config2.setValue("dark");
-
-        List<SystemConfig> configs = Arrays.asList(config1, config2);
-
-        when(systemConfigRepository.findAll()).thenReturn(configs);
+        when(repository.findAll()).thenReturn(Arrays.asList(config));
 
         mockMvc.perform(get("/api/config"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.appName").value("Test Dashboard"))
-                .andExpect(jsonPath("$.theme").value("dark"));
+                .andExpect(jsonPath("$.APP_NAME").value("My Test App"));
     }
 
     @Test
-    void testUpdateConfig() throws Exception {
+    public void testUpdateConfig() throws Exception {
         SystemConfig config = new SystemConfig();
-        config.setKey("appName");
-        config.setValue("New Dashboard");
+        config.setKey("APP_NAME");
+        config.setValue("Updated App");
 
-        when(systemConfigRepository.save(any(SystemConfig.class))).thenReturn(config);
+        when(repository.findByKey("APP_NAME")).thenReturn(null);
+        when(repository.save(any(SystemConfig.class))).thenAnswer(i -> i.getArgument(0));
 
         mockMvc.perform(post("/api/config")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(config)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.key").value("appName"))
-                .andExpect(jsonPath("$.value").value("New Dashboard"));
+                .andExpect(jsonPath("$.key").value("APP_NAME"))
+                .andExpect(jsonPath("$.value").value("Updated App"));
     }
 }
