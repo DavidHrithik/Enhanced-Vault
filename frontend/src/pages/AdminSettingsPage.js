@@ -72,7 +72,7 @@ export default function AdminSettingsPage() {
     const handleAdd = async (category, value, setValue) => {
         if (!value.trim()) return;
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+
             const res = await authFetch(`${API_BASE_URL}/api/options`, {
                 method: "POST",
                 body: JSON.stringify({ category, value })
@@ -97,7 +97,7 @@ export default function AdminSettingsPage() {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+
             const res = await authFetch(`${API_BASE_URL}/api/options/${deleteId}`, {
                 method: "DELETE"
             });
@@ -123,7 +123,7 @@ export default function AdminSettingsPage() {
     const confirmRename = async (newValue) => {
         if (!renameData) return;
         try {
-            const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+
             const res = await authFetch(`${API_BASE_URL}/api/options/${renameData.id}`, {
                 method: "PUT",
                 body: JSON.stringify({ value: newValue })

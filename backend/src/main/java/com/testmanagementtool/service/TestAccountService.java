@@ -15,24 +15,34 @@ public class TestAccountService {
     @Autowired
     private TestAccountRepository repository;
 
+    @Autowired
+    private CryptoService cryptoService;
+
     public List<TestAccount> search(String username, String environment) {
+        List<TestAccount> accounts;
         if (username != null && environment != null) {
-            return repository.findByUsernameContainingAndEnvironment(username, environment);
+            accounts = repository.findByUsernameContainingAndEnvironment(username, environment);
         } else if (username != null) {
-            return repository.findByUsernameContaining(username);
+            accounts = repository.findByUsernameContaining(username);
         } else if (environment != null) {
-            return repository.findByEnvironment(environment);
+            accounts = repository.findByEnvironment(environment);
         } else {
-            return repository.findAll();
+            accounts = repository.findAll();
         }
+        accounts.forEach(this::decryptPassword);
+        return accounts;
     }
 
     public List<TestAccount> getAll() {
-        return repository.findAll();
+        List<TestAccount> accounts = repository.findAll();
+        accounts.forEach(this::decryptPassword);
+        return accounts;
     }
 
     public Optional<TestAccount> getById(@NonNull UUID id) {
-        return repository.findById(id);
+        Optional<TestAccount> account = repository.findById(id);
+        account.ifPresent(this::decryptPassword);
+        return account;
     }
 
     @SuppressWarnings("null")
@@ -40,12 +50,31 @@ public class TestAccountService {
         if (account.getId() == null) {
             account.setId(UUID.randomUUID());
         }
+        encryptPassword(account);
         return repository.save(account);
     }
 
     public TestAccount update(@NonNull UUID id, TestAccount account) {
         account.setId(id);
+        encryptPassword(account);
         return repository.save(account);
+    }
+
+    private void encryptPassword(TestAccount account) {
+        if (account.getPassword() != null) {
+            account.setPassword(cryptoService.encrypt(account.getPassword()));
+        }
+    }
+
+    private void decryptPassword(TestAccount account) {
+        if (account.getPassword() != null) {
+            try {
+                account.setPassword(cryptoService.decrypt(account.getPassword()));
+            } catch (Exception e) {
+                // Ignore decryption errors for now (e.g. legacy data)
+                // Or log it
+            }
+        }
     }
 
     public void delete(@NonNull UUID id) {
