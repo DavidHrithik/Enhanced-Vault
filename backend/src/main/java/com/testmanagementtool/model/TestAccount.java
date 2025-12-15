@@ -11,9 +11,11 @@ import java.util.UUID;
 public class TestAccount {
     @Id
     private UUID id;
+    @jakarta.validation.constraints.NotBlank(message = "Username is required")
     private String username;
     // This field is now shown in the UI with an eye icon
     private String password;
+    @jakarta.validation.constraints.NotBlank(message = "Environment is required")
     private String environment; // DEV, QA, UAT, PROD
     private String owner;
     private List<String> role;

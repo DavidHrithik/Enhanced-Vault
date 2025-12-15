@@ -35,13 +35,13 @@ public class TestAccountController {
     }
 
     @PostMapping
-    public TestAccount create(@RequestBody @NonNull TestAccount account) {
+    public TestAccount create(@RequestBody @NonNull @jakarta.validation.Valid TestAccount account) {
         return service.create(account);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TestAccount> update(@PathVariable @NonNull UUID id,
-            @RequestBody @NonNull TestAccount account) {
+            @RequestBody @NonNull @jakarta.validation.Valid TestAccount account) {
         if (!service.getById(id).isPresent()) {
             return ResponseEntity.notFound().build();
         }

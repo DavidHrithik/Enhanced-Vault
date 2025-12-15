@@ -11,7 +11,9 @@ public class User {
     @Id
     private UUID id;
     @org.springframework.data.mongodb.core.index.Indexed(unique = true, sparse = true, background = true)
+    @jakarta.validation.constraints.NotBlank(message = "Username is required")
     private String username;
+    @jakarta.validation.constraints.NotBlank(message = "Password is required")
     private String password;
     private String role;
 }
