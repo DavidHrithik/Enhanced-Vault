@@ -37,6 +37,9 @@ public class TestAccountService {
 
     @SuppressWarnings("null")
     public TestAccount create(TestAccount account) {
+        if (account.getId() == null) {
+            account.setId(UUID.randomUUID());
+        }
         return repository.save(account);
     }
 
