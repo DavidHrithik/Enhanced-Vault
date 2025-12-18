@@ -62,6 +62,6 @@ public class SecurityConfig {
 
     @Bean
     public org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder passwordEncoder() {
-        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder(5);
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder(12);
     }
 }

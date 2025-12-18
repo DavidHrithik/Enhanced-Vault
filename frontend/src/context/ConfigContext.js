@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 import { API_BASE_URL } from '../utils/config';
+import { authFetch } from '../utils/auth';
 
 const ConfigContext = createContext();
 
@@ -29,9 +30,8 @@ export const ConfigProvider = ({ children }) => {
 
     const updateConfig = async (key, value) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/config`, {
+            const response = await authFetch(`${API_BASE_URL}/api/config`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key, value })
             });
             if (response.ok) {

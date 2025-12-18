@@ -7,14 +7,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
-        // In production, you might want to log this but return a generic message
-        // logger.error("Unhandled exception", e);
+        logger.error("Unhandled exception: ", e);
         Map<String, String> response = new HashMap<>();
         response.put("error", "Internal Server Error");
         response.put("message", "An unexpected error occurred.");
