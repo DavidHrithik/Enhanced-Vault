@@ -8,22 +8,32 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
-    "react-scripts": "5.0.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.16",
+    "eslint": "^9.39.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "jsdom": "^27.4.0",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.4.3"
+    "prettier": "^3.7.4",
+    "tailwindcss": "^3.4.3",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.16"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write ."
   },
   "browserslist": [
     ">0.2%",
