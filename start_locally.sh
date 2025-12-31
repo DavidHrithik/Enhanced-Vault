@@ -13,7 +13,7 @@ if command -v mvn &> /dev/null; then
     # Verify ENCRYPTION_SECRET is set
     if [ -z "$ENCRYPTION_SECRET" ]; then
         echo "WARNING: ENCRYPTION_SECRET is not set. Using default for dev (if configured) or it might fail."
-        export ENCRYPTION_SECRET="dev_secret_key_change_me_in_prod_at_least_32_bytes"
+        export ENCRYPTION_SECRET="MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
     fi
     mvn spring-boot:run &
     BACKEND_PID=$!
