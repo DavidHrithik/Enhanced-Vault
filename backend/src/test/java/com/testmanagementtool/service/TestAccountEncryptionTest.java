@@ -13,7 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentCaptor.forClass;
 
-@SpringBootTest(classes = { TestAccountService.class, CryptoService.class })
+@SpringBootTest(classes = { TestAccountService.class,
+        CryptoService.class }, properties = "encryption.secret=MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=")
 @SuppressWarnings("null")
 public class TestAccountEncryptionTest {
 

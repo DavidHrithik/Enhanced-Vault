@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = CryptoService.class)
+@SpringBootTest(classes = CryptoService.class, properties = "encryption.secret=MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=")
 public class CryptoServiceTest {
 
     @Autowired
