@@ -13,6 +13,12 @@ jobs:
       run:
         working-directory: ./backend
 
+    services:
+      mongo:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -22,6 +28,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      env:
+        SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/test
       run: mvn -B package --file pom.xml
 
   frontend-test:
