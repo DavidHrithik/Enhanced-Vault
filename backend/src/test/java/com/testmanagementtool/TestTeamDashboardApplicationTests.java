@@ -8,8 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-@SpringBootTest(properties = { "spring.data.mongodb.uri=mongodb://localhost:27017/test",
-		"encryption.secret=MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=" })
+@SpringBootTest(properties = { "encryption.secret=MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=" })
 class TestTeamDashboardApplicationTests {
 
 	@MockBean

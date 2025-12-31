@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = "spring.data.mongodb.uri=mongodb://localhost:27017/test")
+@SpringBootTest(properties = "encryption.secret=MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=")
 @AutoConfigureMockMvc
 @SuppressWarnings("null")
 class AuthenticationTests {
