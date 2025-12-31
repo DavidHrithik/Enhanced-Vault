@@ -7,7 +7,16 @@ echo "Starting Enhanced Vault Locally"
 echo "========================================"
 
 # Check for Maven
+MVN_CMD=""
+
 if command -v mvn &> /dev/null; then
+    MVN_CMD="mvn"
+elif [ -f "./backend/mvn" ]; then
+    echo "Using local Maven wrapper from backend/mvn"
+    MVN_CMD="./mvn"
+fi
+
+if [ -n "$MVN_CMD" ]; then
     echo "Starting Backend..."
     cd backend
     # Verify ENCRYPTION_SECRET is set
@@ -15,11 +24,11 @@ if command -v mvn &> /dev/null; then
         echo "WARNING: ENCRYPTION_SECRET is not set. Using default for dev (if configured) or it might fail."
         export ENCRYPTION_SECRET="MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
     fi
-    mvn spring-boot:run &
+    $MVN_CMD spring-boot:run &
     BACKEND_PID=$!
     cd ..
 else
-    echo "Error: Maven 'mvn' not found. Cannot start backend."
+    echo "Error: Maven 'mvn' not found and local wrapper not usable. Cannot start backend."
     echo "Please install Maven or ensure it's in your PATH."
 fi
 
