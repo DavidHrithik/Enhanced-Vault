@@ -47,4 +47,11 @@ public class DropdownOptionController {
         }
         return ResponseEntity.ok(service.updateOption(id, newValue));
     }
+
+    @PostMapping("/reorder")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> reorderOptions(@RequestBody List<String> orderedIds) {
+        service.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

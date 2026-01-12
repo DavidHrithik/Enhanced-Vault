@@ -19,7 +19,7 @@ public class DropdownOptionService {
     private TestAccountRepository testAccountRepository;
 
     public List<DropdownOption> getOptions(String category) {
-        return repository.findByCategory(category);
+        return repository.findByCategoryOrderByDisplayOrderAsc(category);
     }
 
     public DropdownOption addOption(String category, String value) {
@@ -29,6 +29,9 @@ public class DropdownOptionService {
         DropdownOption option = new DropdownOption();
         option.setCategory(category);
         option.setValue(value);
+        // Set default order to be at the end
+        List<DropdownOption> existing = repository.findByCategory(category);
+        option.setDisplayOrder(existing.size());
         return repository.save(option);
     }
 
@@ -66,5 +69,16 @@ public class DropdownOptionService {
         }
 
         return savedOption;
+    }
+
+    public void updateOrder(List<String> orderedIds) {
+        for (int i = 0; i < orderedIds.size(); i++) {
+            String id = orderedIds.get(i);
+            DropdownOption option = repository.findById(id).orElse(null);
+            if (option != null) {
+                option.setDisplayOrder(i);
+                repository.save(option);
+            }
+        }
     }
 }

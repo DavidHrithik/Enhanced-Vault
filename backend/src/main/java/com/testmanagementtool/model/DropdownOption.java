@@ -11,4 +11,5 @@ public class DropdownOption {
     private String id;
     private String category; // "ENVIRONMENT" or "ROLE"
     private String value;
+    private Integer displayOrder;
 }
