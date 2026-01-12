@@ -2,6 +2,8 @@ package com.testmanagementtool.config;
 
 import com.testmanagementtool.repository.DropdownOptionRepository;
 import com.testmanagementtool.service.DropdownOptionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Configuration
 public class DataInitializer {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     @Bean
     CommandLineRunner initDropdownOptions(DropdownOptionRepository repository, DropdownOptionService service,
@@ -26,13 +30,13 @@ public class DataInitializer {
                 environments.forEach(env -> service.addOption("ENVIRONMENT", env));
                 roles.forEach(role -> service.addOption("ROLE", role));
 
-                System.out.println("Initialized default dropdown options.");
+                logger.info("Initialized default dropdown options.");
             }
 
             if (configRepository.count() == 0) {
                 configRepository.save(
                         new com.testmanagementtool.model.SystemConfig("APP_NAME", "The Vault", "Application Name"));
-                System.out.println("Initialized default system config.");
+                logger.info("Initialized default system config.");
             }
         };
     }
