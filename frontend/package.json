@@ -25,7 +25,9 @@
     "prettier": "^3.7.4",
     "tailwindcss": "^3.4.3",
     "vite": "^7.3.0",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
   },
   "scripts": {
     "dev": "vite",
@@ -34,7 +36,14 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "cd .. && husky install"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "browserslist": [
     ">0.2%",

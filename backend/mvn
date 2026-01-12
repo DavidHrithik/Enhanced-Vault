@@ -1,3 +1,5 @@
 #!/bin/bash
 # Wrapper script to use the bundled Maven
-exec "/Users/hrithik/Downloads/maven-mvnd-1.0.3-darwin-aarch64/bin/mvnd" "$@"
+# Get the directory where this script is located
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+exec "$DIR/apache-maven-3.9.6/bin/mvn" "$@"
