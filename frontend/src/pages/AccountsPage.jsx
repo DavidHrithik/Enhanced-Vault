@@ -16,6 +16,8 @@ export default function AccountsPage() {
   // Removed old simple search
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [filters, setFilters] = useState({});
+  const [displaySearch, setDisplaySearch] = useState('');
+  const [globalSearch, setGlobalSearch] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -128,6 +130,26 @@ export default function AccountsPage() {
       }
     });
 
+    // Global Search
+    if (globalSearch) {
+      const searchLower = globalSearch.toLowerCase();
+      result = result.filter((acc) => {
+        const username = acc.username ? String(acc.username).toLowerCase() : '';
+        const environment = acc.environment ? String(acc.environment).toLowerCase() : '';
+        const owner = acc.owner ? String(acc.owner).toLowerCase() : '';
+        const role = Array.isArray(acc.role)
+          ? acc.role.join(', ').toLowerCase()
+          : (acc.role || '').toLowerCase();
+
+        return (
+          username.includes(searchLower) ||
+          environment.includes(searchLower) ||
+          owner.includes(searchLower) ||
+          role.includes(searchLower)
+        );
+      });
+    }
+
     // Sort
     if (sortConfig.key && sortConfig.direction) {
       result.sort((a, b) => {
@@ -152,7 +174,7 @@ export default function AccountsPage() {
     }
 
     return result;
-  }, [accounts, filters, sortConfig]);
+  }, [accounts, filters, sortConfig, globalSearch]);
 
   const handleSort = (key, direction) => {
     setSortConfig({ key, direction });
@@ -224,9 +246,13 @@ export default function AccountsPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="w-full">
               <input
-                className="w-full border border-blue-400/30 bg-[#20243a]/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5f5aa2] placeholder:text-blue-400 opacity-50 cursor-not-allowed"
-                placeholder="Use column headers to filter..."
-                disabled
+                className="w-full border border-blue-400/30 bg-[#20243a]/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5f5aa2] placeholder:text-blue-400"
+                placeholder="Search by username, environment, owner, or role..."
+                value={displaySearch}
+                onChange={(e) => {
+                  setDisplaySearch(e.target.value);
+                  setGlobalSearch(e.target.value);
+                }}
               />
             </div>
             <button

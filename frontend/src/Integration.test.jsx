@@ -74,8 +74,10 @@ describe('The Vault Integration Tests', () => {
     expect(screen.getByRole('button', { name: /\+ Add New Account/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Download Excel/i })).toBeInTheDocument();
 
-    // Check Search (now disabled filter instruction)
-    expect(screen.getByPlaceholderText(/Use column headers to filter/i)).toBeInTheDocument();
+    // Check Search (enabled global search)
+    expect(
+      screen.getByPlaceholderText(/Search by username, environment, owner, or role/i)
+    ).toBeInTheDocument();
   });
 
   test('Admin Settings shows options', async () => {
