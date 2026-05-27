@@ -206,22 +206,39 @@ export default function AccountsPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-bg-start via-bg-mid to-bg-end">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-bg-start via-bg-mid to-bg-end"
+    >
       <UserStatus />
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute w-[120vw] h-[120vw] left-1/2 top-[-40vw] -translate-x-1/2 bg-gradient-to-tr from-primary/30 via-secondary/20 to-surface/0 rounded-full blur-3xl animate-pulse"></div>
       </div>
       <BackNav className="mb-6" />
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pb-12">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
-            T.A.D.A.
-          </span>
-        </h1>
-        <p className="text-lg text-cyan-200 mb-12 text-center max-w-2xl font-semibold">
-          Not all test accounts are here yet—see which secret agents made it to T.A.D.A.!
-        </p>
-        <div className="w-full max-w-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 mb-12 overflow-x-auto">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center"
+        >
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
+              T.A.D.A.
+            </span>
+          </h1>
+          <p className="text-lg text-cyan-200 mb-12 text-center max-w-2xl font-semibold">
+            Not all test accounts are here yet—see which secret agents made it to T.A.D.A.!
+          </p>
+        </motion.div>
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.15, type: 'spring', stiffness: 85, damping: 14 }}
+          className="w-full max-w-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 mb-12 overflow-x-auto"
+        >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-3">
               <div className="p-2 bg-gradient-to-br from-secondary to-primary rounded-lg shadow-lg">
@@ -251,7 +268,7 @@ export default function AccountsPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="w-full">
               <input
-                className="w-full border border-blue-400/30 bg-surface/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-blue-400"
+                className="w-full border border-blue-400/30 bg-surface/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-blue-400 transition-all duration-200"
                 placeholder="Search by username, environment, owner, or role..."
                 value={displaySearch}
                 onChange={(e) => {
@@ -260,18 +277,22 @@ export default function AccountsPage() {
                 }}
               />
             </div>
-            <button
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200 cursor-pointer whitespace-nowrap"
               onClick={handleAdd}
             >
               + Add New Account
-            </button>
-            <button
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-400 text-white font-bold shadow-lg hover:from-cyan-400 hover:to-blue-400 transition-all duration-200 ml-2"
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-blue-400 to-cyan-400 text-white font-bold shadow-lg hover:from-cyan-400 hover:to-blue-400 transition-all duration-200 ml-0 md:ml-2 cursor-pointer whitespace-nowrap"
               onClick={handleDownloadExcel}
             >
               Download Excel
-            </button>
+            </motion.button>
           </div>
           <div className="w-full">
             <div className="hidden md:block overflow-x-auto rounded-xl">
@@ -340,14 +361,20 @@ export default function AccountsPage() {
                       </td>
                     </tr>
                   ) : (
-                    filteredAndSortedAccounts.map((account) => (
-                      <tr key={account.id} className="hover:bg-surface/40 transition-all">
+                    filteredAndSortedAccounts.map((account, idx) => (
+                      <motion.tr
+                        key={account.id}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + (idx % 15) * 0.03, ease: 'easeOut' }}
+                        className="hover:bg-surface/40 transition-all border-b border-white/5"
+                      >
                         <td className="px-4 py-2 font-medium text-white/90 min-w-[180px] max-w-[250px] truncate group relative">
                           <div className="flex items-center justify-between">
                             <span title={account.username}>{account.username}</span>
                             <button
                               onClick={() => handleCopy(account.username)}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:text-white p-1"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:text-white p-1 cursor-pointer"
                               title="Copy Username"
                             >
                               <svg
@@ -459,7 +486,7 @@ export default function AccountsPage() {
                           </button>
                           <button
                             onClick={() => handleCopy(account.password)}
-                            className="text-primary hover:text-white p-1"
+                            className="text-primary hover:text-white p-1 cursor-pointer"
                             title="Copy Password"
                           >
                             <svg
@@ -489,21 +516,25 @@ export default function AccountsPage() {
                         </td>
                         <td className="px-4 py-2 min-w-[140px]">
                           <div className="flex flex-wrap gap-2 items-center justify-start">
-                            <button
-                              className="flex items-center gap-1 bg-gradient-to-r from-secondary to-primary text-surface font-bold px-3 py-1 rounded-xl shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="flex items-center gap-1 bg-gradient-to-r from-secondary to-primary text-surface font-bold px-3 py-1 rounded-xl shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200 cursor-pointer"
                               onClick={(e) => handleEdit(account, e)}
                             >
                               Edit
-                            </button>
-                            <button
-                              className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-400 text-white font-bold px-3 py-1 rounded-xl shadow-lg hover:from-pink-400 hover:to-red-500 transition-all duration-200"
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="flex items-center gap-1 bg-gradient-to-r from-red-500 to-pink-400 text-white font-bold px-3 py-1 rounded-xl shadow-lg hover:from-pink-400 hover:to-red-500 transition-all duration-200 cursor-pointer"
                               onClick={() => handleDelete(account.id)}
                             >
                               Delete
-                            </button>
+                            </motion.button>
                           </div>
                         </td>
-                      </tr>
+                      </motion.tr>
                     ))
                   )}
                 </tbody>
@@ -517,9 +548,12 @@ export default function AccountsPage() {
               ) : filteredAndSortedAccounts.length === 0 ? (
                 <div className="text-center text-primary py-8">No accounts found.</div>
               ) : (
-                filteredAndSortedAccounts.map((account) => (
-                  <div
+                filteredAndSortedAccounts.map((account, idx) => (
+                  <motion.div
                     key={account.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + (idx % 10) * 0.05, ease: 'easeOut' }}
                     className="bg-surface/90 backdrop-blur-xl border border-primary/20 p-5 rounded-2xl shadow-lg flex flex-col gap-3"
                   >
                     <div className="flex justify-between items-start border-b border-primary/10 pb-3 mb-1">
@@ -550,7 +584,7 @@ export default function AccountsPage() {
                           </div>
                         </div>
                         <button
-                          className="focus:outline-none p-2 rounded-full hover:bg-white/5 transition-colors"
+                          className="focus:outline-none p-2 rounded-full hover:bg-white/5 transition-colors cursor-pointer"
                           onClick={() =>
                             setVisiblePasswords((v) => ({ ...v, [account.id]: !v[account.id] }))
                           }
@@ -621,25 +655,29 @@ export default function AccountsPage() {
                     </div>
 
                     <div className="flex gap-2 mt-2 pt-3 border-t border-primary/10">
-                      <button
-                        className="flex-1 px-4 py-2 rounded-xl bg-primary/10 text-primary font-bold border border-primary/30 hover:bg-primary/20 transition-all text-sm"
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 px-4 py-2 rounded-xl bg-primary/10 text-primary font-bold border border-primary/30 hover:bg-primary/20 transition-all text-sm cursor-pointer"
                         onClick={(e) => handleEdit(account, e)}
                       >
                         Edit
-                      </button>
-                      <button
-                        className="flex-1 px-4 py-2 rounded-xl bg-red-500/10 text-red-300 font-bold border border-red-500/30 hover:bg-red-500/20 transition-all text-sm"
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 px-4 py-2 rounded-xl bg-red-500/10 text-red-300 font-bold border border-red-500/30 hover:bg-red-500/20 transition-all text-sm cursor-pointer"
                         onClick={() => handleDelete(account.id)}
                       >
                         Delete
-                      </button>
+                      </motion.button>
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
         <AccountModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
@@ -676,6 +714,6 @@ export default function AccountsPage() {
           </div>
         )}
       </main>
-    </div>
+    </motion.div>
   );
 }

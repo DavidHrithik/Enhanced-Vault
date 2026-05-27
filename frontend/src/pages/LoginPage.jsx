@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedBackground from '../components/AnimatedBackground';
 import QuoteWidget from '../components/QuoteWidget';
 
@@ -87,15 +88,23 @@ const LoginPage = () => {
       </div>
       <AnimatedBackground />
       <main className="relative z-10 flex flex-col items-center justify-center px-4 min-h-screen w-full">
-        <div className="text-center mb-8">
+        <motion.div
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="text-center mb-8"
+        >
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4 tracking-tight drop-shadow-2xl">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-[#7ea4c7] animate-gradient">
               {config.APP_NAME || 'The Vault'}
             </span>
           </h1>
           <p className="text-lg text-cyan-200/80 font-medium tracking-wide">Secure Access Portal</p>
-        </div>
-        <div
+        </motion.div>
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 100, damping: 15, delay: 0.15 }}
           className="w-full max-w-md bg-surface/40 backdrop-blur-3xl border border-primary/20 shadow-md rounded-3xl p-8 flex flex-col items-center"
           style={{
             boxShadow: '0 4px 16px 0 rgba(34, 41, 70, 0.15)',
@@ -114,7 +123,7 @@ const LoginPage = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-2 rounded-xl bg-bg-end/70 border border-primary/20 text-white focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-white/40"
+                className="w-full px-4 py-2 rounded-xl bg-bg-end/70 border border-primary/20 text-white focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-white/40 transition-all duration-200"
                 placeholder="Enter your username"
               />
             </div>
@@ -125,20 +134,34 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2 rounded-xl bg-bg-end/70 border border-primary/20 text-white focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-white/40"
+                className="w-full px-4 py-2 rounded-xl bg-bg-end/70 border border-primary/20 text-white focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-white/40 transition-all duration-200"
                 placeholder="Enter your password"
               />
             </div>
-            {error && <div className="text-red-300 font-semibold text-center">{error}</div>}
-            <button
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: -10 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-red-300 font-semibold text-center overflow-hidden"
+                >
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full bg-gradient-to-r from-surface via-secondary to-bg-end text-primary font-bold py-2 rounded-xl shadow-lg hover:from-secondary hover:to-primary hover:text-white transition-all duration-200 disabled:opacity-60 border border-primary/30"
+              className="w-full bg-gradient-to-r from-surface via-secondary to-bg-end text-primary font-bold py-2 rounded-xl shadow-lg hover:from-secondary hover:to-primary hover:text-white transition-all duration-200 disabled:opacity-60 border border-primary/30 cursor-pointer"
               disabled={loading}
             >
               {loading ? loadingText : 'Login'}
-            </button>
+            </motion.button>
           </form>
-        </div>
+        </motion.div>
       </main>
       <QuoteWidget />
     </div>

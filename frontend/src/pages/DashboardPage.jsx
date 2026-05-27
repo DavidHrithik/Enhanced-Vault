@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   PieChart,
   Pie,
@@ -57,44 +58,78 @@ export default function DashboardPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-bg-start via-bg-mid to-bg-end text-white p-8 overflow-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-bg-start via-bg-mid to-bg-end text-white p-8 overflow-auto"
+    >
       <UserStatus />
       <BackNav />
 
       <div className="max-w-7xl mx-auto mt-4">
-        <h1 className="text-4xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80">
-          Device Dashboard
-        </h1>
-        <p className="text-center text-cyan-200 mb-12">Overview of device inventory and usage</p>
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+          <h1 className="text-4xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80">
+            Device Dashboard
+          </h1>
+          <p className="text-center text-cyan-200 mb-12">Overview of device inventory and usage</p>
+        </motion.div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            whileHover={{ y: -4, scale: 1.02 }}
+            transition={{ delay: 0.1, type: 'spring', stiffness: 100, damping: 15 }}
+            className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center cursor-default"
+          >
             <h3 className="text-primary font-bold text-lg uppercase tracking-wider">
               Total Devices
             </h3>
             <span className="text-5xl font-extrabold text-white mt-2">{stats.totalDevices}</span>
-          </div>
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center">
+          </motion.div>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            whileHover={{ y: -4, scale: 1.02 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 100, damping: 15 }}
+            className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center cursor-default"
+          >
             <h3 className="text-primary font-bold text-lg uppercase tracking-wider">
               Active Users
             </h3>
             <span className="text-5xl font-extrabold text-white mt-2">
               {Object.keys(stats.topOwners).length}
             </span>
-          </div>
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center">
+          </motion.div>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            whileHover={{ y: -4, scale: 1.02 }}
+            transition={{ delay: 0.3, type: 'spring', stiffness: 100, damping: 15 }}
+            className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-xl flex flex-col items-center cursor-default"
+          >
             <h3 className="text-primary font-bold text-lg uppercase tracking-wider">
               Status Types
             </h3>
             <span className="text-5xl font-extrabold text-white mt-2">{statusData.length}</span>
-          </div>
+          </motion.div>
         </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Status Distribution Chart */}
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl relative group">
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, type: 'spring', stiffness: 80, damping: 14 }}
+            className="bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl relative group"
+          >
             <h3 className="text-xl font-bold text-center mb-6 text-white">
               Device Status Distribution
             </h3>
@@ -131,10 +166,15 @@ export default function DashboardPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </motion.div>
 
           {/* Top Owners Chart */}
-          <div className="bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl relative group">
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, type: 'spring', stiffness: 80, damping: 14 }}
+            className="bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl relative group"
+          >
             <h3 className="text-xl font-bold text-center mb-6 text-white">Top 5 Device Owners</h3>
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-blue-200 bg-blue-500/20 px-2 py-1 rounded">
               Click bar to filter
@@ -174,11 +214,16 @@ export default function DashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Device Possession Tracker */}
-        <div className="mt-12 bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl">
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6, type: 'spring', stiffness: 80, damping: 14 }}
+          className="mt-12 bg-surface/50 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl"
+        >
           <h3 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
             <svg
               className="w-6 h-6 text-primary"
@@ -210,8 +255,11 @@ export default function DashboardPage() {
                   stats.devicePossessions.map((item, idx) => {
                     const isStale = item.daysHeld > 30;
                     return (
-                      <tr
+                      <motion.tr
                         key={idx}
+                        initial={{ opacity: 0, x: -15 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7 + idx * 0.03, ease: 'easeOut' }}
                         className="border-b border-white/5 hover:bg-white/5 transition-colors"
                       >
                         <td className="p-4 font-bold text-white">{item.owner}</td>
@@ -238,7 +286,7 @@ export default function DashboardPage() {
                             )}
                           </div>
                         </td>
-                      </tr>
+                      </motion.tr>
                     );
                   })
                 ) : (
@@ -251,8 +299,8 @@ export default function DashboardPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

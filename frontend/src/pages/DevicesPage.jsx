@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Loader from '../components/Loader';
 
 import DeviceModal from '../components/DeviceModal';
@@ -219,38 +220,57 @@ export default function DevicesPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-bg-start via-bg-mid to-bg-end relative overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-bg-start via-bg-mid to-bg-end relative overflow-hidden"
+    >
       <UserStatus />
       <BackNav />
       <main className="relative z-10 flex flex-col items-center px-4 min-h-screen w-full">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-1 mt-0 tracking-tight drop-shadow-xl text-center">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
-            D.H.Q.
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center"
+        >
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-1 mt-0 tracking-tight drop-shadow-xl">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
+              D.H.Q.
+            </span>
+          </h1>
+          <span className="text-lg md:text-xl font-semibold text-cyan-200 mb-4 mt-0 tracking-wider block">
+            See which devices are reporting for duty at D.H.Q.
           </span>
-        </h1>
-        <span className="text-lg md:text-xl font-semibold text-cyan-200 mb-4 mt-0 text-center max-w-2xl tracking-wider">
-          See which devices are reporting for duty at D.H.Q.
-        </span>
+        </motion.div>
 
         {loading ? (
           <Loader text={editIdx !== null ? 'Saving changes...' : 'Loading devices...'} />
         ) : error ? (
           <div className="text-red-300 text-center py-12 font-bold">{error}</div>
         ) : (
-          <>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.15, duration: 0.5 }}
+            className="w-full max-w-full flex flex-col items-center"
+          >
             {/* Advanced Search and Filter Controls */}
             <div className="flex flex-wrap gap-4 mb-6 w-full max-w-full items-center justify-between">
               <div className="flex gap-4 items-center">
                 <input
                   type="text"
-                  className="px-4 py-2 rounded-xl bg-[rgba(40,60,90,0.16)] border border-primary/30 shadow focus:outline-none focus:ring-2 focus:ring-primary text-white placeholder:text-cyan-200 min-w-[200px]"
+                  className="px-4 py-2 rounded-xl bg-[rgba(40,60,90,0.16)] border border-primary/30 shadow focus:outline-none focus:ring-2 focus:ring-primary text-white placeholder:text-cyan-200 min-w-[200px] transition-all duration-200"
                   placeholder="Search by model or owner..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   aria-label="Search devices"
                 />
-                <button
-                  className="px-5 py-2 rounded-xl bg-surface/50 border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200 flex items-center gap-2"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-5 py-2 rounded-xl bg-surface/50 border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200 flex items-center gap-2 cursor-pointer"
                   onClick={() => (window.location.href = '/dashboard')}
                 >
                   <svg
@@ -268,23 +288,27 @@ export default function DevicesPage() {
                     />
                   </svg>
                   Dashboard
-                </button>
+                </motion.button>
               </div>
 
               <div className="flex gap-4">
-                <button
-                  className="px-5 py-2 rounded-xl bg-surface border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-5 py-2 rounded-xl bg-surface border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200 cursor-pointer"
                   onClick={handleExport}
                 >
                   Export to Excel
-                </button>
+                </motion.button>
                 {isAdmin && (
-                  <button
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200 cursor-pointer"
                     onClick={handleAdd}
                   >
                     + Add Device
-                  </button>
+                  </motion.button>
                 )}
               </div>
             </div>
@@ -304,7 +328,7 @@ export default function DevicesPage() {
               onDelete={handleDeleteClick}
               onHistory={handleHistory}
             />
-          </>
+          </motion.div>
         )}
       </main>
       <DeviceModal
@@ -326,6 +350,6 @@ export default function DevicesPage() {
         title="Delete Device?"
         message="Are you sure you want to remove this device from DHQ?"
       />
-    </div>
+    </motion.div>
   );
 }
