@@ -78,10 +78,15 @@ public class DeviceService {
                     java.util.Date d1 = (java.util.Date) m1.get("assignedDate");
                     java.util.Date d2 = (java.util.Date) m2.get("assignedDate");
                     // Sort by most recent assignment (descending)
-                    if (d1 == null)
+                    if (d1 == null && d2 == null) {
+                        return 0;
+                    }
+                    if (d1 == null) {
                         return 1;
-                    if (d2 == null)
+                    }
+                    if (d2 == null) {
                         return -1;
+                    }
                     return d2.compareTo(d1);
                 })
                 .collect(java.util.stream.Collectors.toList());
