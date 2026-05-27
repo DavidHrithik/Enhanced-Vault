@@ -50,7 +50,7 @@ export default function ColumnHeader({
         className={`ml-1 p-1 transition-colors duration-200 bg-transparent border-none outline-none focus:outline-none hover:bg-transparent shadow-none ${
           isOpen || currentSort || currentFilter
             ? 'text-cyan-300 drop-shadow-[0_0_8px_rgba(103,232,249,0.5)]'
-            : 'text-[#5f5aa2] hover:text-[#a7c7e7] drop-shadow-md'
+            : 'text-secondary hover:text-primary drop-shadow-md'
         }`}
       >
         <motion.svg
@@ -81,17 +81,17 @@ export default function ColumnHeader({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full right-0 mt-2 w-56 p-3 rounded-xl bg-[#232946]/95 backdrop-blur-xl border border-[#a7c7e7]/20 shadow-2xl z-50 flex flex-col gap-3"
+            className="absolute top-full right-0 mt-2 w-56 p-3 rounded-xl bg-surface/95 backdrop-blur-xl border border-primary/20 shadow-2xl z-50 flex flex-col gap-3"
           >
             {/* Sort Section */}
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-[#a7c7e7] uppercase opacity-70">Sort</span>
+              <span className="text-xs font-bold text-primary uppercase opacity-70">Sort</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleSort('asc')}
                   className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                     currentSort === 'asc'
-                      ? 'bg-gradient-to-br from-[#5f5aa2] to-[#a7c7e7] text-[#232946] shadow-lg'
+                      ? 'bg-gradient-to-br from-secondary to-primary text-surface shadow-lg'
                       : 'bg-white/5 text-white/80 hover:bg-white/10'
                   }`}
                 >
@@ -101,7 +101,7 @@ export default function ColumnHeader({
                   onClick={() => handleSort('desc')}
                   className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                     currentSort === 'desc'
-                      ? 'bg-gradient-to-br from-[#5f5aa2] to-[#a7c7e7] text-[#232946] shadow-lg'
+                      ? 'bg-gradient-to-br from-secondary to-primary text-surface shadow-lg'
                       : 'bg-white/5 text-white/80 hover:bg-white/10'
                   }`}
                 >
@@ -110,17 +110,17 @@ export default function ColumnHeader({
               </div>
             </div>
 
-            <div className="h-px bg-[#a7c7e7]/20 w-full" />
+            <div className="h-px bg-primary/20 w-full" />
 
             {/* Filter Section */}
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-[#a7c7e7] uppercase opacity-70">Filter</span>
+              <span className="text-xs font-bold text-primary uppercase opacity-70">Filter</span>
               <input
                 type="text"
                 value={currentFilter}
                 onChange={(e) => onFilter(columnKey, e.target.value)}
                 placeholder={`Search ${title}...`}
-                className="w-full bg-[#1b1e2e] border border-[#a7c7e7]/30 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#a7c7e7] focus:ring-1 focus:ring-[#a7c7e7]"
+                className="w-full bg-[#1b1e2e] border border-primary/30 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 autoFocus
               />
             </div>

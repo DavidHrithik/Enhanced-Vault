@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
-import Loader from "../components/Loader";
+import { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
+import Loader from '../components/Loader';
 
-import DeviceModal from "../components/DeviceModal";
-import DeviceTable from "../components/DeviceTable";
-import DeviceHistoryModal from "../components/DeviceHistoryModal";
-import ConfirmationModal from "../components/ConfirmationModal";
+import DeviceModal from '../components/DeviceModal';
+import DeviceTable from '../components/DeviceTable';
+import DeviceHistoryModal from '../components/DeviceHistoryModal';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 function getRoleFromToken() {
   try {
@@ -24,21 +24,26 @@ function getRoleFromToken() {
   }
 }
 
-import BackNav from "../components/BackNav";
-import UserStatus from "../components/UserStatus";
-import { API_BASE_URL } from "../utils/config";
+import * as XLSX from 'xlsx';
+
+import BackNav from '../components/BackNav';
+import UserStatus from '../components/UserStatus';
+import { API_BASE_URL } from '../utils/config';
 export default function DevicesPage() {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [editIdx, setEditIdx] = useState(null);
-  const [editOwner, setEditOwner] = useState("");
-  const [editStatus, setEditStatus] = useState("");
-  const [search, setSearch] = useState("");
+  const [editOwner, setEditOwner] = useState('');
+  const [editStatus, setEditStatus] = useState('');
+  const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [historyDeviceId, setHistoryDeviceId] = useState(null);
-  const [modalOrigin, setModalOrigin] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  const [modalOrigin, setModalOrigin] = useState({
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+  });
   const [deleteId, setDeleteId] = useState(null);
 
   const role = getRoleFromToken();
@@ -49,12 +54,12 @@ export default function DevicesPage() {
 
   const fetchDevices = useCallback(async () => {
     setLoading(true);
-    setError("");
+    setError('');
     try {
       const token = localStorage.getItem('token');
 
       const res = await fetch(`${API_BASE_URL}/api/devices`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (!res.ok) throw new Error('Failed to fetch devices');
       const data = await res.json();
@@ -81,11 +86,33 @@ export default function DevicesPage() {
           setStatusOptions(data);
         }
       } catch (_) {
-        console.error("Failed to fetch status options");
+        console.error('Failed to fetch status options');
       }
     };
     fetchStatusOptions();
   }, []);
+
+  // Filtered devices for Table and Export
+  const filteredDevices = devices.filter(
+    (d) =>
+      !search ||
+      d.model.toLowerCase().includes(search.toLowerCase()) ||
+      (d.owner && d.owner.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const handleExport = () => {
+    const dataToExport = filteredDevices.map((d) => ({
+      Model: d.model,
+      Owner: d.owner || 'None',
+      Status: d.status || 'Available',
+      'Last Updated': d.updatedDate ? new Date(d.updatedDate).toLocaleString() : 'N/A',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Devices');
+    XLSX.writeFile(wb, 'DHQ_Devices_Report.xlsx');
+  };
 
   const handleEdit = (idx) => {
     setEditIdx(idx);
@@ -98,21 +125,21 @@ export default function DevicesPage() {
     const token = localStorage.getItem('token');
     try {
       setLoading(true);
-      setError("");
+      setError('');
 
       // Use the generic update endpoint
       const res = await fetch(`${API_BASE_URL}/api/devices/${device.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ owner: editOwner, status: editStatus })
+        body: JSON.stringify({ owner: editOwner, status: editStatus }),
       });
       if (!res.ok) throw new Error('Failed to update device');
       setEditIdx(null);
-      setEditOwner("");
-      setEditStatus("");
+      setEditOwner('');
+      setEditStatus('');
       await fetchDevices(); // Refetch after save
     } catch (_) {
       setError('Could not update device');
@@ -122,8 +149,8 @@ export default function DevicesPage() {
 
   const handleCancel = () => {
     setEditIdx(null);
-    setEditOwner("");
-    setEditStatus("");
+    setEditOwner('');
+    setEditStatus('');
   };
 
   const handleHistory = (id, e) => {
@@ -153,9 +180,9 @@ export default function DevicesPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) throw new Error('Failed to add device');
@@ -179,8 +206,8 @@ export default function DevicesPage() {
       const res = await fetch(`${API_BASE_URL}/api/devices/${deleteId}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) throw new Error('Failed to delete device');
@@ -192,49 +219,78 @@ export default function DevicesPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#1e2337] via-[#232946] to-[#15161c] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-bg-start via-bg-mid to-bg-end relative overflow-hidden">
       <UserStatus />
       <BackNav />
       <main className="relative z-10 flex flex-col items-center px-4 min-h-screen w-full">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-1 mt-0 tracking-tight drop-shadow-xl text-center">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#a7c7e7] via-[#5f5aa2] to-[#7ea4c7] animate-gradient">D.H.Q.</span>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
+            D.H.Q.
+          </span>
         </h1>
         <span className="text-lg md:text-xl font-semibold text-cyan-200 mb-4 mt-0 text-center max-w-2xl tracking-wider">
           See which devices are reporting for duty at D.H.Q.
         </span>
 
         {loading ? (
-          <Loader text={editIdx !== null ? "Saving changes..." : "Loading devices..."} />
+          <Loader text={editIdx !== null ? 'Saving changes...' : 'Loading devices...'} />
         ) : error ? (
           <div className="text-red-300 text-center py-12 font-bold">{error}</div>
         ) : (
           <>
             {/* Advanced Search and Filter Controls */}
-            <div className="flex flex-wrap gap-4 mb-4 w-full max-w-4xl items-center justify-between">
-              <input
-                type="text"
-                className="px-4 py-2 rounded-xl bg-[rgba(40,60,90,0.16)] border border-[#a7c7e7]/30 shadow focus:outline-none focus:ring-2 focus:ring-[#a7c7e7] text-white placeholder:text-cyan-200 min-w-[200px]"
-                placeholder="Search by model or owner..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                aria-label="Search devices"
-              />
-              {isAdmin && (
+            <div className="flex flex-wrap gap-4 mb-6 w-full max-w-full items-center justify-between">
+              <div className="flex gap-4 items-center">
+                <input
+                  type="text"
+                  className="px-4 py-2 rounded-xl bg-[rgba(40,60,90,0.16)] border border-primary/30 shadow focus:outline-none focus:ring-2 focus:ring-primary text-white placeholder:text-cyan-200 min-w-[200px]"
+                  placeholder="Search by model or owner..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search devices"
+                />
                 <button
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
-                  onClick={handleAdd}
+                  className="px-5 py-2 rounded-xl bg-surface/50 border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200 flex items-center gap-2"
+                  onClick={() => (window.location.href = '/dashboard')}
                 >
-                  + Add Device
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                  Dashboard
                 </button>
-              )}
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  className="px-5 py-2 rounded-xl bg-surface border border-primary/30 text-primary font-bold shadow-lg hover:bg-primary/10 transition-all duration-200"
+                  onClick={handleExport}
+                >
+                  Export to Excel
+                </button>
+                {isAdmin && (
+                  <button
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
+                    onClick={handleAdd}
+                  >
+                    + Add Device
+                  </button>
+                )}
+              </div>
             </div>
 
             <DeviceTable
-              devices={devices.filter(d =>
-                !search ||
-                d.model.toLowerCase().includes(search.toLowerCase()) ||
-                (d.owner && d.owner.toLowerCase().includes(search.toLowerCase()))
-              )}
+              devices={filteredDevices}
               isAdmin={isAdmin}
               statusOptions={statusOptions}
               editIdx={editIdx}

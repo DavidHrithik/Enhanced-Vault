@@ -160,25 +160,36 @@ export default function AdminSettingsPage() {
     }
   };
 
+  const handleThemeReset = async () => {
+    if (window.confirm('Reset all theme colors to defaults?')) {
+      await updateConfig('THEME_PRIMARY', '#a7c7e7');
+      await updateConfig('THEME_SECONDARY', '#5f5aa2');
+      await updateConfig('THEME_SURFACE', '#232946');
+      await updateConfig('THEME_BG_START', '#1e2337');
+      await updateConfig('THEME_BG_MID', '#232946');
+      await updateConfig('THEME_BG_END', '#15161c');
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1e2337] via-[#232946] to-[#15161c] text-white p-8">
+    <div className="min-h-screen bg-gradient-to-br from-bg-start via-bg-mid to-bg-end text-white p-8">
       <UserStatus />
       <BackNav />
       <div className="max-w-4xl mx-auto mt-12">
-        <h1 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#a7c7e7] via-[#5f5aa2] to-[#7ea4c7]">
+        <h1 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80">
           Admin Settings
         </h1>
 
         {/* General Settings Section */}
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-[#a7c7e7]">General Settings</h2>
+          <h2 className="text-2xl font-bold mb-4 text-primary">General Settings</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-blue-200 mb-1">
                 Application Name
               </label>
               <input
-                className="w-full bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="w-full bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-secondary"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
               />
@@ -189,7 +200,7 @@ export default function AdminSettingsPage() {
                 T.A.D.A. Tile Name
               </label>
               <input
-                className="w-full bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="w-full bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-secondary"
                 value={tadaTileName}
                 onChange={(e) => setTadaTileName(e.target.value)}
               />
@@ -199,7 +210,7 @@ export default function AdminSettingsPage() {
                 D.H.Q. Tile Name
               </label>
               <input
-                className="w-full bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="w-full bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-secondary"
                 value={dhqTileName}
                 onChange={(e) => setDhqTileName(e.target.value)}
               />
@@ -215,13 +226,133 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
+        {/* Theme Studio Section */}
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-primary">Theme Studio</h2>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleThemeReset}
+                className="text-xs text-red-300 bg-red-500/10 px-2 py-1 rounded border border-red-500/20 hover:bg-red-500/20 transition-all font-bold"
+              >
+                Reset to Defaults
+              </button>
+              <div className="text-xs text-blue-300 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">
+                {"Customize your vault's look"}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-blue-200 mb-2">Primary Accent</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
+                  value={config.THEME_PRIMARY || 'primary'}
+                  onChange={(e) => updateConfig('THEME_PRIMARY', e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                  value={config.THEME_PRIMARY || 'primary'}
+                  onChange={(e) => updateConfig('THEME_PRIMARY', e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-200 mb-2">
+                Secondary Accent
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
+                  value={config.THEME_SECONDARY || 'secondary'}
+                  onChange={(e) => updateConfig('THEME_SECONDARY', e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                  value={config.THEME_SECONDARY || 'secondary'}
+                  onChange={(e) => updateConfig('THEME_SECONDARY', e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-200 mb-2">Surface Color</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
+                  value={config.THEME_SURFACE || 'surface'}
+                  onChange={(e) => updateConfig('THEME_SURFACE', e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                  value={config.THEME_SURFACE || 'surface'}
+                  onChange={(e) => updateConfig('THEME_SURFACE', e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-200 mb-2">
+                Background Start
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
+                  value={config.THEME_BG_START || 'bg-start'}
+                  onChange={(e) => updateConfig('THEME_BG_START', e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                  value={config.THEME_BG_START || 'bg-start'}
+                  onChange={(e) => updateConfig('THEME_BG_START', e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-200 mb-2">Background End</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  className="w-10 h-10 rounded cursor-pointer bg-transparent border-0"
+                  value={config.THEME_BG_END || 'bg-end'}
+                  onChange={(e) => updateConfig('THEME_BG_END', e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                  value={config.THEME_BG_END || 'bg-end'}
+                  onChange={(e) => updateConfig('THEME_BG_END', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 p-4 bg-black/20 rounded-xl border border-white/5">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-bg-start to-bg-end shadow-lg flex items-center justify-center border border-primary/30">
+                <div className="w-8 h-8 rounded-full bg-secondary"></div>
+              </div>
+              <div>
+                <h3 className="font-bold text-primary">Live Preview</h3>
+                <p className="text-secondary text-sm">Theme changes are saved automatically.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8">
           {/* Environments Section */}
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-[#a7c7e7]">Environments</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">Environments</h2>
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-secondary"
                 placeholder="New Environment"
                 value={newEnv}
                 onChange={(e) => setNewEnv(e.target.value)}
@@ -243,7 +374,7 @@ export default function AdminSettingsPage() {
                 <Reorder.Item
                   key={env.id}
                   value={env}
-                  className="flex justify-between items-center bg-[#232946]/50 p-3 rounded-lg border border-white/5 cursor-move"
+                  className="flex justify-between items-center bg-surface/50 p-3 rounded-lg border border-white/5 cursor-move"
                 >
                   <span>{env.value}</span>
                   <div className="flex gap-2">
@@ -287,10 +418,10 @@ export default function AdminSettingsPage() {
 
           {/* Roles Section */}
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-[#a7c7e7]">Roles</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">Roles</h2>
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-secondary"
                 placeholder="New Role"
                 value={newRole}
                 onChange={(e) => setNewRole(e.target.value)}
@@ -312,7 +443,7 @@ export default function AdminSettingsPage() {
                 <Reorder.Item
                   key={role.id}
                   value={role}
-                  className="flex justify-between items-center bg-[#232946]/50 p-3 rounded-lg border border-white/5 cursor-move"
+                  className="flex justify-between items-center bg-surface/50 p-3 rounded-lg border border-white/5 cursor-move"
                 >
                   <span>{role.value}</span>
                   <div className="flex gap-2">
@@ -356,10 +487,10 @@ export default function AdminSettingsPage() {
 
           {/* Device Status Section */}
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-2xl font-bold mb-4 text-[#a7c7e7]">Device Statuses</h2>
+            <h2 className="text-2xl font-bold mb-4 text-primary">Device Statuses</h2>
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#20243a]/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-[#5f5aa2]"
+                className="flex-1 bg-surface/80 border border-blue-400/30 rounded-lg px-3 py-2 text-blue-200 focus:outline-none focus:ring-2 focus:ring-secondary"
                 placeholder="New Status"
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
@@ -375,7 +506,7 @@ export default function AdminSettingsPage() {
               {deviceStatuses.map((status) => (
                 <li
                   key={status.id}
-                  className="flex justify-between items-center bg-[#232946]/50 p-3 rounded-lg border border-white/5"
+                  className="flex justify-between items-center bg-surface/50 p-3 rounded-lg border border-white/5"
                 >
                   <span>{status.value}</span>
                   <div className="flex gap-2">

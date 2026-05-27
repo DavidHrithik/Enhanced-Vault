@@ -65,7 +65,7 @@ export default function DeviceTable({
         style={{ maxHeight: '75vh' }}
       >
         <table
-          className="w-full table-fixed divide-y divide-[#a7c7e7]/20 rounded-2xl overflow-hidden shadow-xl bg-[rgba(40,60,90,0.16)] backdrop-blur-xl border border-[#a7c7e7]/30"
+          className="w-full table-fixed divide-y divide-primary/20 rounded-2xl overflow-hidden shadow-xl bg-[rgba(40,60,90,0.16)] backdrop-blur-xl border border-primary/30"
           style={{ WebkitBackdropFilter: 'blur(16px)', backdropFilter: 'blur(16px)' }}
         >
           <thead
@@ -73,10 +73,10 @@ export default function DeviceTable({
             style={{ WebkitBackdropFilter: 'blur(12px)', backdropFilter: 'blur(12px)' }}
           >
             <tr>
-              <th className="w-[5%] min-w-[50px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[5%] min-w-[50px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 S.No
               </th>
-              <th className="w-[20%] min-w-[150px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[20%] min-w-[150px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 <ColumnHeader
                   title="Device Model"
                   columnKey="model"
@@ -86,7 +86,7 @@ export default function DeviceTable({
                   onFilter={handleFilter}
                 />
               </th>
-              <th className="w-[15%] min-w-[140px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[15%] min-w-[140px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 <ColumnHeader
                   title="Status"
                   columnKey="status"
@@ -96,7 +96,7 @@ export default function DeviceTable({
                   onFilter={handleFilter}
                 />
               </th>
-              <th className="w-[20%] min-w-[160px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[20%] min-w-[160px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 <ColumnHeader
                   title="Owner"
                   columnKey="owner"
@@ -106,7 +106,7 @@ export default function DeviceTable({
                   onFilter={handleFilter}
                 />
               </th>
-              <th className="w-[15%] min-w-[150px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[15%] min-w-[150px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 <ColumnHeader
                   title="Updated Date"
                   columnKey="updatedDate"
@@ -116,12 +116,12 @@ export default function DeviceTable({
                   onFilter={handleFilter}
                 />
               </th>
-              <th className="w-[25%] min-w-[240px] px-6 py-3 text-left text-xs font-bold text-[#a7c7e7] uppercase tracking-wider">
+              <th className="w-[25%] min-w-[240px] px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#a7c7e7]/10">
+          <tbody className="divide-y divide-primary/10">
             {filteredAndSortedDevices.map((device, idx) => (
               <SlideInRow key={device.id || idx} delay={idx * 80}>
                 <td className="px-6 py-3 text-lg font-semibold text-white/90">{idx + 1}</td>
@@ -129,7 +129,7 @@ export default function DeviceTable({
                 <td className="px-6 py-3">
                   {isAdmin && editIdx === idx ? (
                     <select
-                      className="w-full bg-[rgba(255,255,255,0.16)] border border-[#a7c7e7]/40 rounded-lg px-2 py-1 text-[#232946] font-semibold focus:outline-none focus:ring-2 focus:ring-[#a7c7e7]"
+                      className="w-full bg-[rgba(255,255,255,0.16)] border border-primary/40 rounded-lg px-2 py-1 text-surface font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
                     >
@@ -167,7 +167,7 @@ export default function DeviceTable({
                 <td className="px-6 py-3 text-lg text-green-200 font-bold">
                   {isAdmin && editIdx === idx ? (
                     <input
-                      className="w-full bg-[rgba(255,255,255,0.16)] border border-[#a7c7e7]/40 rounded-lg px-2 py-1 text-[#232946] font-semibold focus:outline-none focus:ring-2 focus:ring-[#a7c7e7]"
+                      className="w-full bg-[rgba(255,255,255,0.16)] border border-primary/40 rounded-lg px-2 py-1 text-surface font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
                       value={editOwner}
                       onChange={(e) => setEditOwner(e.target.value)}
                       autoFocus
@@ -182,7 +182,7 @@ export default function DeviceTable({
                 <td className="px-6 py-3">
                   <div className="flex gap-2">
                     <button
-                      className="px-3 py-1 rounded-xl bg-[#232946] border border-[#a7c7e7]/30 text-[#a7c7e7] font-bold shadow hover:bg-[#a7c7e7]/10"
+                      className="px-3 py-1 rounded-xl bg-surface border border-primary/30 text-primary font-bold shadow hover:bg-primary/10"
                       onClick={(e) => onHistory(device.id, e)}
                     >
                       History
@@ -192,7 +192,7 @@ export default function DeviceTable({
                         {editIdx === idx ? (
                           <>
                             <button
-                              className="px-3 py-1 rounded-xl bg-gradient-to-r from-[#a7c7e7] to-[#5f5aa2] text-[#232946] font-bold shadow hover:bg-[#5f5aa2]"
+                              className="px-3 py-1 rounded-xl bg-gradient-to-r from-primary to-secondary text-surface font-bold shadow hover:bg-secondary"
                               onClick={() => onSave(idx)}
                             >
                               Save
@@ -207,7 +207,7 @@ export default function DeviceTable({
                         ) : (
                           <>
                             <button
-                              className="px-3 py-1 rounded-xl bg-gradient-to-r from-[#a7c7e7] to-[#5f5aa2] text-[#232946] font-bold shadow hover:bg-[#5f5aa2]"
+                              className="px-3 py-1 rounded-xl bg-gradient-to-r from-primary to-secondary text-surface font-bold shadow hover:bg-secondary"
                               onClick={() => onEdit(idx)}
                             >
                               Edit
@@ -235,16 +235,16 @@ export default function DeviceTable({
         {filteredAndSortedDevices.map((device, idx) => (
           <div
             key={device.id || idx}
-            className="bg-[rgba(40,60,90,0.6)] backdrop-blur-xl border border-[#a7c7e7]/30 p-4 rounded-xl shadow-lg flex flex-col gap-3"
+            className="bg-[rgba(40,60,90,0.6)] backdrop-blur-xl border border-primary/30 p-4 rounded-xl shadow-lg flex flex-col gap-3"
           >
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-bold text-[#a7c7e7] uppercase">Model</span>
+                <span className="text-xs font-bold text-primary uppercase">Model</span>
                 <div className="text-xl text-cyan-200 font-bold">{device.model}</div>
               </div>
               {isAdmin && editIdx === idx ? (
                 <select
-                  className="bg-[rgba(255,255,255,0.16)] border border-[#a7c7e7]/40 rounded-lg px-2 py-1 text-[#232946] font-bold text-sm focus:outline-none"
+                  className="bg-[rgba(255,255,255,0.16)] border border-primary/40 rounded-lg px-2 py-1 text-surface font-bold text-sm focus:outline-none"
                   value={editStatus}
                   onChange={(e) => setEditStatus(e.target.value)}
                 >
@@ -282,10 +282,10 @@ export default function DeviceTable({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-xs font-bold text-[#a7c7e7] uppercase">Owner</span>
+                <span className="text-xs font-bold text-primary uppercase">Owner</span>
                 {isAdmin && editIdx === idx ? (
                   <input
-                    className="w-full bg-[rgba(255,255,255,0.16)] border border-[#a7c7e7]/40 rounded-lg px-2 py-1 text-[#232946] font-semibold mt-1"
+                    className="w-full bg-[rgba(255,255,255,0.16)] border border-primary/40 rounded-lg px-2 py-1 text-surface font-semibold mt-1"
                     value={editOwner}
                     onChange={(e) => setEditOwner(e.target.value)}
                   />
@@ -294,16 +294,16 @@ export default function DeviceTable({
                 )}
               </div>
               <div>
-                <span className="text-xs font-bold text-[#a7c7e7] uppercase">Updated</span>
+                <span className="text-xs font-bold text-primary uppercase">Updated</span>
                 <div className="text-cyan-100 font-mono text-sm">
                   {device.updatedDate ? new Date(device.updatedDate).toLocaleDateString() : '--'}
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2 mt-2 pt-3 border-t border-[#a7c7e7]/20">
+            <div className="flex gap-2 mt-2 pt-3 border-t border-primary/20">
               <button
-                className="flex-1 px-3 py-2 rounded-xl bg-[#232946] border border-[#a7c7e7]/30 text-[#a7c7e7] font-bold shadow hover:bg-[#a7c7e7]/10 text-sm"
+                className="flex-1 px-3 py-2 rounded-xl bg-surface border border-primary/30 text-primary font-bold shadow hover:bg-primary/10 text-sm"
                 onClick={(e) => onHistory(device.id, e)}
               >
                 History
@@ -313,7 +313,7 @@ export default function DeviceTable({
                   {editIdx === idx ? (
                     <>
                       <button
-                        className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-[#a7c7e7] to-[#5f5aa2] text-[#232946] font-bold shadow text-sm"
+                        className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-surface font-bold shadow text-sm"
                         onClick={() => onSave(idx)}
                       >
                         Save
@@ -328,7 +328,7 @@ export default function DeviceTable({
                   ) : (
                     <>
                       <button
-                        className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-[#a7c7e7] to-[#5f5aa2] text-[#232946] font-bold shadow text-sm"
+                        className="flex-1 px-3 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-surface font-bold shadow text-sm"
                         onClick={() => onEdit(idx)}
                       >
                         Edit

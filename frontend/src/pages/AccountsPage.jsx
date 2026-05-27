@@ -200,16 +200,21 @@ export default function AccountsPage() {
     XLSX.writeFile(workbook, 'accounts.xlsx');
   };
 
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    showToast('Copied to clipboard!');
+  };
+
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-[#1e2337] via-[#232946] to-[#15161c]">
+    <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-bg-start via-bg-mid to-bg-end">
       <UserStatus />
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute w-[120vw] h-[120vw] left-1/2 top-[-40vw] -translate-x-1/2 bg-gradient-to-tr from-[#a7c7e7]/30 via-[#5f5aa2]/20 to-[#232946]/0 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute w-[120vw] h-[120vw] left-1/2 top-[-40vw] -translate-x-1/2 bg-gradient-to-tr from-primary/30 via-secondary/20 to-surface/0 rounded-full blur-3xl animate-pulse"></div>
       </div>
       <BackNav className="mb-6" />
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pb-12">
         <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-xl">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#a7c7e7] via-[#5f5aa2] to-[#7ea4c7] animate-gradient">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-primary/80 animate-gradient">
             T.A.D.A.
           </span>
         </h1>
@@ -219,10 +224,10 @@ export default function AccountsPage() {
         <div className="w-full max-w-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 mb-12 overflow-x-auto">
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-[#5f5aa2] to-[#a7c7e7] rounded-lg shadow-lg">
+              <div className="p-2 bg-gradient-to-br from-secondary to-primary rounded-lg shadow-lg">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-[#232946]"
+                  className="h-6 w-6 text-surface"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -239,14 +244,14 @@ export default function AccountsPage() {
                 Credentials Repository
               </span>
             </h2>
-            <div className="hidden md:block text-cyan-200/60 text-sm font-mono bg-[#232946]/50 px-3 py-1 rounded-full border border-white/5">
+            <div className="hidden md:block text-cyan-200/60 text-sm font-mono bg-surface/50 px-3 py-1 rounded-full border border-white/5">
               {accounts.length} Active Agents
             </div>
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="w-full">
               <input
-                className="w-full border border-blue-400/30 bg-[#20243a]/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5f5aa2] placeholder:text-blue-400"
+                className="w-full border border-blue-400/30 bg-surface/80 text-blue-200 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-blue-400"
                 placeholder="Search by username, environment, owner, or role..."
                 value={displaySearch}
                 onChange={(e) => {
@@ -256,7 +261,7 @@ export default function AccountsPage() {
               />
             </div>
             <button
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
               onClick={handleAdd}
             >
               + Add New Account
@@ -271,9 +276,9 @@ export default function AccountsPage() {
           <div className="w-full">
             <div className="hidden md:block overflow-x-auto rounded-xl">
               <table className="min-w-[1300px] w-full bg-white/10 backdrop-blur-lg border border-white/10 rounded-xl table-fixed">
-                <thead className="bg-[#232946]/70">
+                <thead className="bg-surface/70">
                   <tr>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[180px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[180px]">
                       <ColumnHeader
                         title="Username"
                         columnKey="username"
@@ -283,10 +288,10 @@ export default function AccountsPage() {
                         onFilter={handleFilter}
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[140px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[140px]">
                       Password
                     </th>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[120px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[120px]">
                       <ColumnHeader
                         title="Environment"
                         columnKey="environment"
@@ -296,7 +301,7 @@ export default function AccountsPage() {
                         onFilter={handleFilter}
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[150px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[150px]">
                       <ColumnHeader
                         title="Owner"
                         columnKey="owner"
@@ -306,7 +311,7 @@ export default function AccountsPage() {
                         onFilter={handleFilter}
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[150px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[150px]">
                       <ColumnHeader
                         title="Role"
                         columnKey="role"
@@ -316,7 +321,7 @@ export default function AccountsPage() {
                         onFilter={handleFilter}
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-[#a7c7e7] font-semibold min-w-[140px]">
+                    <th className="px-4 py-3 text-left text-primary font-semibold min-w-[140px]">
                       Actions
                     </th>
                   </tr>
@@ -324,24 +329,43 @@ export default function AccountsPage() {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan={6} className="text-center py-10 text-[#a7c7e7]">
+                      <td colSpan={6} className="text-center py-10 text-primary">
                         Loading...
                       </td>
                     </tr>
                   ) : accounts.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="text-center py-10 text-[#a7c7e7]">
+                      <td colSpan={6} className="text-center py-10 text-primary">
                         No accounts found.
                       </td>
                     </tr>
                   ) : (
                     filteredAndSortedAccounts.map((account) => (
-                      <tr key={account.id} className="hover:bg-[#232946]/40 transition-all">
-                        <td
-                          className="px-4 py-2 font-medium text-white/90 min-w-[180px] max-w-[250px] truncate"
-                          title={account.username}
-                        >
-                          {account.username}
+                      <tr key={account.id} className="hover:bg-surface/40 transition-all">
+                        <td className="px-4 py-2 font-medium text-white/90 min-w-[180px] max-w-[250px] truncate group relative">
+                          <div className="flex items-center justify-between">
+                            <span title={account.username}>{account.username}</span>
+                            <button
+                              onClick={() => handleCopy(account.username)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity text-primary hover:text-white p-1"
+                              title="Copy Username"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         </td>
                         <td className="px-4 py-2 text-white/80 font-mono tracking-widest min-w-[140px] flex items-center gap-2">
                           {visiblePasswords[account.id] ? account.password || '' : '••••••••••'}
@@ -350,7 +374,7 @@ export default function AccountsPage() {
                             style={{
                               background: 'none',
                               border: 'none',
-                              color: 'var(--accent, #a7c7e7)',
+                              color: 'var(--accent, primary)',
                               minWidth: 28,
                               minHeight: 28,
                               lineHeight: 0,
@@ -361,10 +385,11 @@ export default function AccountsPage() {
                               transition: 'color 0.2s',
                             }}
                             onMouseEnter={(e) =>
-                              (e.currentTarget.style.color = 'var(--primary-text, #232946)')
+                              (e.currentTarget.style.color =
+                                'var(--primary-text, rgb(var(--surface)))')
                             }
                             onMouseLeave={(e) =>
-                              (e.currentTarget.style.color = 'var(--accent, #a7c7e7)')
+                              (e.currentTarget.style.color = 'var(--accent, rgb(var(--primary)))')
                             }
                             aria-label={
                               visiblePasswords[account.id] ? 'Hide password' : 'Show password'
@@ -421,7 +446,7 @@ export default function AccountsPage() {
                                     y1="4"
                                     x2="20"
                                     y2="20"
-                                    stroke="#a7c7e7"
+                                    stroke="rgb(var(--primary))"
                                     strokeWidth="2"
                                     strokeLinecap="round"
                                     initial={{ pathLength: 0 }}
@@ -432,20 +457,40 @@ export default function AccountsPage() {
                               )}
                             </motion.div>
                           </button>
+                          <button
+                            onClick={() => handleCopy(account.password)}
+                            className="text-primary hover:text-white p-1"
+                            title="Copy Password"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                              />
+                            </svg>
+                          </button>
                         </td>
                         <td className="px-4 py-2 text-white/80 min-w-[120px]">
                           {account.environment}
                         </td>
                         <td className="px-4 py-2 text-white/80 min-w-[150px]">
-                          {account.owner || <span className="text-[#a7c7e7]">—</span>}
+                          {account.owner || <span className="text-primary">—</span>}
                         </td>
                         <td className="px-4 py-2 text-white/80 min-w-[150px]">
-                          {account.role?.join(', ') || <span className="text-[#a7c7e7]">None</span>}
+                          {account.role?.join(', ') || <span className="text-primary">None</span>}
                         </td>
                         <td className="px-4 py-2 min-w-[140px]">
                           <div className="flex flex-wrap gap-2 items-center justify-start">
                             <button
-                              className="flex items-center gap-1 bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold px-3 py-1 rounded-xl shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
+                              className="flex items-center gap-1 bg-gradient-to-r from-secondary to-primary text-surface font-bold px-3 py-1 rounded-xl shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
                               onClick={(e) => handleEdit(account, e)}
                             >
                               Edit
@@ -468,18 +513,18 @@ export default function AccountsPage() {
             {/* Mobile Card View */}
             <div className="md:hidden flex flex-col gap-4">
               {loading ? (
-                <div className="text-center text-[#a7c7e7] py-8">Loading accounts...</div>
+                <div className="text-center text-primary py-8">Loading accounts...</div>
               ) : filteredAndSortedAccounts.length === 0 ? (
-                <div className="text-center text-[#a7c7e7] py-8">No accounts found.</div>
+                <div className="text-center text-primary py-8">No accounts found.</div>
               ) : (
                 filteredAndSortedAccounts.map((account) => (
                   <div
                     key={account.id}
-                    className="bg-[#232946]/90 backdrop-blur-xl border border-[#a7c7e7]/20 p-5 rounded-2xl shadow-lg flex flex-col gap-3"
+                    className="bg-surface/90 backdrop-blur-xl border border-primary/20 p-5 rounded-2xl shadow-lg flex flex-col gap-3"
                   >
-                    <div className="flex justify-between items-start border-b border-[#a7c7e7]/10 pb-3 mb-1">
+                    <div className="flex justify-between items-start border-b border-primary/10 pb-3 mb-1">
                       <div>
-                        <span className="text-xs font-bold text-[#a7c7e7] uppercase tracking-wide">
+                        <span className="text-xs font-bold text-primary uppercase tracking-wide">
                           Username
                         </span>
                         <div
@@ -495,9 +540,9 @@ export default function AccountsPage() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      <div className="flex items-center justify-between bg-[#1b1e2e]/50 p-2 rounded-lg border border-[#a7c7e7]/10">
+                      <div className="flex items-center justify-between bg-bg-end/50 p-2 rounded-lg border border-primary/10">
                         <div>
-                          <span className="text-xs font-bold text-[#a7c7e7] uppercase tracking-wide block mb-1">
+                          <span className="text-xs font-bold text-primary uppercase tracking-wide block mb-1">
                             Password
                           </span>
                           <div className="font-mono text-white/90 tracking-widest text-sm">
@@ -516,7 +561,7 @@ export default function AccountsPage() {
                           {visiblePasswords[account.id] ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-[#a7c7e7]"
+                              className="h-5 w-5 text-primary"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -531,7 +576,7 @@ export default function AccountsPage() {
                           ) : (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-[#a7c7e7]"
+                              className="h-5 w-5 text-primary"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -555,29 +600,29 @@ export default function AccountsPage() {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <span className="text-xs font-bold text-[#a7c7e7] uppercase tracking-wide">
+                          <span className="text-xs font-bold text-primary uppercase tracking-wide">
                             Owner
                           </span>
                           <div className="text-white text-sm">
-                            {account.owner || <span className="text-[#a7c7e7]">—</span>}
+                            {account.owner || <span className="text-primary">—</span>}
                           </div>
                         </div>
                         <div>
-                          <span className="text-xs font-bold text-[#a7c7e7] uppercase tracking-wide">
+                          <span className="text-xs font-bold text-primary uppercase tracking-wide">
                             Role
                           </span>
                           <div className="text-white text-sm">
                             {Array.isArray(account.role)
                               ? account.role.join(', ')
-                              : account.role || <span className="text-[#a7c7e7]">None</span>}
+                              : account.role || <span className="text-primary">None</span>}
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex gap-2 mt-2 pt-3 border-t border-[#a7c7e7]/10">
+                    <div className="flex gap-2 mt-2 pt-3 border-t border-primary/10">
                       <button
-                        className="flex-1 px-4 py-2 rounded-xl bg-[#a7c7e7]/10 text-[#a7c7e7] font-bold border border-[#a7c7e7]/30 hover:bg-[#a7c7e7]/20 transition-all text-sm"
+                        className="flex-1 px-4 py-2 rounded-xl bg-primary/10 text-primary font-bold border border-primary/30 hover:bg-primary/20 transition-all text-sm"
                         onClick={(e) => handleEdit(account, e)}
                       >
                         Edit
@@ -615,7 +660,7 @@ export default function AccountsPage() {
               </p>
               <div className="flex gap-4 w-full justify-center">
                 <button
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#5f5aa2] to-[#a7c7e7] text-[#232946] font-bold shadow-lg hover:from-[#a7c7e7] hover:to-[#5f5aa2] hover:text-white transition-all duration-200"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-secondary to-primary text-surface font-bold shadow-lg hover:from-primary hover:to-secondary hover:text-white transition-all duration-200"
                   onClick={cancelDelete}
                 >
                   Cancel

@@ -26,6 +26,75 @@ public class DeviceService {
         return deviceRepository.findAll();
     }
 
+    public java.util.Map<String, Object> getDeviceStats() {
+        List<Device> devices = deviceRepository.findAll();
+
+        // Status counts
+        java.util.Map<String, Long> statusCounts = devices.stream()
+                .collect(java.util.stream.Collectors.groupingBy(
+                        d -> d.getStatus() != null ? d.getStatus() : "Unknown",
+                        java.util.stream.Collectors.counting()));
+
+        // Owner counts (top 5)
+        java.util.Map<String, Long> ownerCounts = devices.stream()
+                .filter(d -> d.getOwner() != null && !d.getOwner().isEmpty() && !d.getOwner().equalsIgnoreCase("None"))
+                .collect(java.util.stream.Collectors.groupingBy(
+                        Device::getOwner,
+                        java.util.stream.Collectors.counting()));
+
+        // Provide top 5 owners
+        java.util.Map<String, Long> topOwners = ownerCounts.entrySet().stream()
+                .sorted(java.util.Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .collect(java.util.stream.Collectors.toMap(
+                        java.util.Map.Entry::getKey,
+                        java.util.Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        java.util.LinkedHashMap::new));
+
+        // Calculate possession metrics
+        long now = new java.util.Date().getTime();
+        List<java.util.Map<String, Object>> devicePossessions = devices.stream()
+                .filter(d -> d.getOwner() != null && !d.getOwner().isEmpty() && !d.getOwner().equalsIgnoreCase("None"))
+                .map(d -> {
+                    java.util.Map<String, Object> map = new java.util.HashMap<>();
+                    map.put("model", d.getModel());
+                    map.put("owner", d.getOwner());
+                    java.util.Date startDate = d.getLastAssignedDate() != null ? d.getLastAssignedDate()
+                            : d.getUpdatedDate();
+                    map.put("assignedDate", startDate);
+
+                    if (startDate != null) {
+                        long diffInMillies = Math.abs(now - startDate.getTime());
+                        long diff = java.util.concurrent.TimeUnit.DAYS.convert(diffInMillies,
+                                java.util.concurrent.TimeUnit.MILLISECONDS);
+                        map.put("daysHeld", diff);
+                    } else {
+                        map.put("daysHeld", 0L);
+                    }
+                    return map;
+                })
+                .sorted((m1, m2) -> {
+                    java.util.Date d1 = (java.util.Date) m1.get("assignedDate");
+                    java.util.Date d2 = (java.util.Date) m2.get("assignedDate");
+                    // Sort by most recent assignment (descending)
+                    if (d1 == null)
+                        return 1;
+                    if (d2 == null)
+                        return -1;
+                    return d2.compareTo(d1);
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+        java.util.Map<String, Object> stats = new java.util.HashMap<>();
+        stats.put("totalDevices", devices.size());
+        stats.put("statusCounts", statusCounts);
+        stats.put("topOwners", topOwners);
+        stats.put("devicePossessions", devicePossessions);
+
+        return stats;
+    }
+
     public Optional<Device> getDeviceById(@NonNull UUID id) {
         return deviceRepository.findById(id);
     }
@@ -34,6 +103,9 @@ public class DeviceService {
         device.setId(UUID.randomUUID());
         if (device.getOwner() == null) {
             device.setOwner("None");
+        }
+        if (device.getOwner() != null && !device.getOwner().isEmpty() && !device.getOwner().equalsIgnoreCase("None")) {
+            device.setLastAssignedDate(new java.util.Date());
         }
         device.setUpdatedDate(new java.util.Date());
         if (device.getStatus() == null) {
@@ -71,6 +143,13 @@ public class DeviceService {
         if (newOwner != null && !newOwner.equals(oldOwner)) {
             device.setOwner(newOwner);
             ownerChanged = true;
+            // Update last assigned date if acquiring a new owner
+            if (!newOwner.isEmpty() && !newOwner.equalsIgnoreCase("None")) {
+                device.setLastAssignedDate(new java.util.Date());
+            } else {
+                // If owner is removed, clear the assigned date
+                device.setLastAssignedDate(null);
+            }
         }
 
         // Update Status

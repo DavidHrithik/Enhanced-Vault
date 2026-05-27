@@ -33,6 +33,11 @@ public class DeviceController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getDeviceStats() {
+        return ResponseEntity.ok(deviceService.getDeviceStats());
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Device> createDevice(@RequestBody @NonNull Device device) {

@@ -5,45 +5,58 @@
 /* Modern Scrollbar for Devices Table */
 .modern-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #a7c7e7 #232946;
+  scrollbar-color: rgb(var(--primary)) rgb(var(--surface));
 }
 
 .modern-scrollbar::-webkit-scrollbar {
   width: 8px;
-  background: #232946;
+  background: rgb(var(--surface));
 }
 
 .modern-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #a7c7e7 0%, #5f5aa2 100%);
+  background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--secondary)) 100%);
   border-radius: 8px;
 }
 
 .modern-scrollbar::-webkit-scrollbar-track {
-  background: #232946;
+  background: rgb(var(--surface));
   border-radius: 8px;
 }
 
 /* --- Dark mode support --- */
 :root {
+  /* Default Theme Colors (RGB format for Tailwind opacity support) */
+  --primary: 167 199 231; /* primary */
+  --secondary: 95 90 162; /* secondary */
+  --surface: 35 41 70; /* surface */
+  --bg-start: 30 35 55; /* bg-start */
+  --bg-mid: 35 41 70; /* surface */
+  --bg-end: 21 22 28; /* bg-end */
+
+  /* Legacy vars just in case */
   --primary-bg: #f4f4f9;
-  --primary-text: #232946;
-  --accent: #a7c7e7;
-  --surface: #fff;
+  --primary-text: rgb(var(--surface));
+  --accent: rgb(var(--primary));
+  --surface-legacy: #fff;
 }
 
 .dark {
+  --primary: 167 199 231;
+  --secondary: 95 90 162;
+  --surface: 35 41 70;
+  
   --primary-bg: #181a23;
   --primary-text: #f4f4f9;
-  --accent: #5f5aa2;
-  --surface: #232946;
+  --accent: rgb(var(--secondary));
+  --surface-legacy: rgb(var(--surface));
 }
 
 html {
-  background-color: #15161c;
+  background-color: rgb(var(--bg-end));
 }
 
 body {
-  background: linear-gradient(to bottom right, #1e2337, #232946, #15161c);
+  background: linear-gradient(to bottom right, rgb(var(--bg-start)), rgb(var(--surface)), rgb(var(--bg-end)));
   background-attachment: fixed;
   min-height: 100vh;
   color: var(--primary-text);

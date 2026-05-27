@@ -74,6 +74,24 @@ public class DeviceControllerTest {
 
         @Test
         @WithMockUser
+        public void testGetDeviceStats() throws Exception {
+                java.util.Map<String, Object> mockStats = new java.util.HashMap<>();
+                mockStats.put("totalDevices", 1);
+                
+                java.util.Map<String, Long> statusCounts = new java.util.HashMap<>();
+                statusCounts.put("Available", 1L);
+                mockStats.put("statusCounts", statusCounts);
+
+                when(deviceService.getDeviceStats()).thenReturn(mockStats);
+
+                mockMvc.perform(get("/api/devices/stats"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.totalDevices").value(1))
+                                .andExpect(jsonPath("$.statusCounts.Available").value(1));
+        }
+
+        @Test
+        @WithMockUser
         public void testGetDeviceById() throws Exception {
                 UUID id = UUID.randomUUID();
                 Device device = new Device();
