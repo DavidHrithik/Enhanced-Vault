@@ -30,6 +30,7 @@ jobs:
     - name: Build with Maven
       env:
         SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/test
+        SPRING_AUTOCONFIGURE_EXCLUDE: de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration
       run: mvn -B package --file pom.xml
 
   frontend-test:
